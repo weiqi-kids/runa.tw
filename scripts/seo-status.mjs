@@ -10,15 +10,15 @@
 // token 不會印出來。先決條件：
 //   1. gcloud auth login 過（帳號對服務帳號有 Service Account Token Creator）
 //   2. GSC「設定 → 使用者和權限」把服務帳號加為「完整」使用者
-//   3. GA4 資源「管理 → 資源存取管理」把服務帳號加為「檢視者」，並把資源 ID 填進下面的 GA_PROPERTY
+//   3. GA4 資源「管理 → 資源存取管理」把服務帳號加為「編輯者」（Admin API 改設定要用到）
 
 import { execFileSync } from 'node:child_process';
 
 const SA = 'runa-index@runa-tw.iam.gserviceaccount.com';
 const SITE = 'sc-domain:runa.tw';
 const ORIGIN = 'https://runa.tw';
-// GA4 資源 ID（數字，不是 G- 開頭的評估 ID）。還沒建 GA 前是 null，traffic 只跑 GSC。
-const GA_PROPERTY = process.env.RUNA_GA_PROPERTY || null;
+// GA4 資源 ID（數字，不是 G- 開頭的評估 ID）。資源名稱 runa.tw，網站串流評估 ID G-7Z4DRRB2WM。
+const GA_PROPERTY = process.env.RUNA_GA_PROPERTY || '556506274';
 
 const only = process.argv[2] ?? 'all';
 const want = (s) => only === 'all' || only === s;
@@ -156,7 +156,11 @@ if (want('traffic')) {
       metrics: [{ name: 'sessions' }, { name: 'activeUsers' }],
       limit: 20,
     });
-    if (ga.error) console.log(`  ERROR ${ga.error.code} ${ga.error.message?.slice(0, 120)}`);
+    if (ga.error) {
+      console.log(`  ERROR ${ga.error.code} ${ga.error.message?.slice(0, 120)}`);
+      // 2026-09-29 新建資源當天遇過；當時即時報表有資料（權限沒問題）。推測是報表資料尚未處理完成，未查證。
+      if (/shard id/i.test(ga.error.message ?? '')) console.log('  （新資源常見：一般報表資料尚未處理完成，隔天再跑；未查證）');
+    }
     else if (!ga.rows?.length) console.log('  期間內沒有流量');
     else for (const r of ga.rows) {
       const src = r.dimensionValues[0].value;
