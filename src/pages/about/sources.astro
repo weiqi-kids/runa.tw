@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="資料來源" description="月奈創角引用哪些資料、怎麼標示日期與出處。"
+  crumbs={[{ name: '關於', path: '/about/' }, { name: '資料來源', path: '/about/sources/' }]}>
+  <article class="shell">
+    <header class="page-hd"><p class="kicker">關於</p><h1>資料來源</h1></header>
+    <section class="block prose">
+      <h2>我們引用什麼</h2>
+      <ul>
+        <li><strong>品牌官網</strong>：商品介紹、組合內容、規格、售價。每一筆都記下查閱日期。</li>
+        <li><strong>實測</strong>：編輯實際使用的紀錄，寫在產品頁的「實際使用」。</li>
+        <li><strong>影音</strong>：月奈創角的 YouTube、Instagram 影片，掛在對應的產品頁下。</li>
+      </ul>
+      <h2>怎麼標示</h2>
+      <ul>
+        <li>每個價格旁邊都有查閱日期與來源連結；沒有日期與出處的價格不顯示。</li>
+        <li>品牌對功效的描述一律標為「品牌宣稱（本站未驗證）」。</li>
+        <li>頁面底部列出全部來源，並附更新紀錄。</li>
+      </ul>
+      <h2>給 AI 與引用者</h2>
+      <p>本站提供 <a href="/llms.txt">llms.txt</a>，說明網站結構與引用時應一併帶上的前提。引用價格時請附上查閱日期——活動價會變動。</p>
+    </section>
+  </article>
+</Base>

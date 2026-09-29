@@ -1,0 +1,151 @@
+---
+import '../styles/site.css';
+import { SITE_NAME, SITE_SHORT, TAGLINE, NAV, IS_PRODUCTION, GA_ID, GSC_TOKEN } from '../lib/site';
+
+interface Crumb { name: string; path: string }
+interface Props {
+  title: string;
+  description?: string;
+  // 草稿頁：noindex、不輸出 JSON-LD、頁首掛「未查證」橫幅
+  draft?: boolean;
+  noindex?: boolean;
+  // 首頁那一層由這裡自己補，呼叫端只給下層
+  crumbs?: Crumb[];
+  // 頁型專屬的結構化資料（Product、FAQPage、ItemList…），由各頁組好傳進來
+  jsonLd?: object[];
+  image?: string;
+  bare?: boolean;
+}
+const { title, description, draft = false, noindex = false, crumbs = [], jsonLd = [], image, bare = false } = Astro.props;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const url = `${site}${Astro.url.pathname}`;
+const robotsNoindex = !IS_PRODUCTION || draft || noindex;
+const fullTitle = Astro.url.pathname === '/' ? title : `${title}｜${SITE_SHORT}`;
+const ogImage = image ? new URL(image, `${site}/`).toString() : `${site}/icon-512.png`;
+const trail = [{ name: '首頁', path: '/' }, ...crumbs];
+
+const baseLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${site}/#website`,
+    name: SITE_NAME,
+    alternateName: SITE_SHORT,
+    url: `${site}/`,
+    inLanguage: 'zh-Hant-TW',
+    description: TAGLINE,
+    publisher: { '@id': `${site}/#org` },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${site}/#org`,
+    name: SITE_SHORT,
+    url: `${site}/`,
+    logo: { '@type': 'ImageObject', url: `${site}/icon-512.png`, width: 512, height: 512 },
+  },
+  crumbs.length > 0 && {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: trail.map((c, i) => ({
+      '@type': 'ListItem', position: i + 1, name: c.name, item: `${site}${c.path}`,
+    })),
+  },
+].filter(Boolean);
+// noindex 的頁不輸出 JSON-LD：不想被收錄的頁，給了反而是在請引擎理解它。
+const ld = robotsNoindex ? [] : [...baseLd, ...jsonLd];
+const current = Astro.url.pathname;
+---
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    {robotsNoindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={url} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icon-512.png" />
+    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" />
+
+    <meta property="og:title" content={fullTitle} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+
+    {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
+
+    {GSC_TOKEN && <meta name="google-site-verification" content={GSC_TOKEN} />}
+    {/* GA4 只在正式站載入：開發建置、本機預覽的流量不該混進正式數據 */}
+    {IS_PRODUCTION && GA_ID && (
+      <>
+        <script async is:inline src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+        <script is:inline define:vars={{ GA_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){ dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', GA_ID);
+        </script>
+      </>
+    )}
+  </head>
+  <body>
+    <a class="skip" href="#main">跳到主要內容</a>
+    {!bare && (
+      <header class="a-hd">
+        <div class="a-shell a-bar">
+          <a class="a-logo" href="/" aria-label={SITE_NAME}><span class="a-moon" aria-hidden="true"></span>月奈<b>嚴選</b></a>
+          <nav class="a-nav" aria-label="主選單">
+            {NAV.map((n) => (
+              <a href={n.href} aria-current={current.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>
+            ))}
+          </nav>
+        </div>
+      </header>
+    )}
+
+    {draft && (
+      <div class="draft-banner" role="note">
+        <div class="a-shell">
+          <strong>草稿・未實測</strong>　本頁資料取自下方列出的來源，編輯尚未實際使用；不收錄於搜尋引擎。
+        </div>
+      </div>
+    )}
+
+    <main id="main">
+      {crumbs.length > 0 && (
+        <nav class="shell crumbs" aria-label="麵包屑">
+          {trail.map((c, i) => (i < trail.length - 1
+            ? <><a href={c.path}>{c.name}</a><span aria-hidden="true">／</span></>
+            : <span aria-current="page">{c.name}</span>))}
+        </nav>
+      )}
+      <slot />
+    </main>
+
+    <footer class="a-ft">
+      <div class="a-shell">
+        <p class="a-ft-logo"><span class="a-moon" aria-hidden="true"></span>{SITE_NAME}</p>
+        <p>{TAGLINE}</p>
+        <p>
+          <a href="/about/method/">選品方法</a>　<a href="/about/criteria/">評選標準</a>　<a href="/about/sources/">資料來源</a>　<a href="/about/#contact">聯絡我們</a>　<a href="/llms.txt">llms.txt</a>
+        </p>
+        <p class="a-ft-note">價格與活動以品牌官網為準，每一頁都標示查閱日期。標示「聯盟連結」的購買連結，月奈可能獲得分潤，不影響選品結論。</p>
+      </div>
+    </footer>
+    <script>
+      // 桌機以外的窄螢幕，主選單可橫向捲動；目前項目捲到可見範圍
+      document.querySelector('.a-nav [aria-current="page"]')?.scrollIntoView({ block: 'nearest', inline: 'center' });
+    </script>
+  </body>
+</html>

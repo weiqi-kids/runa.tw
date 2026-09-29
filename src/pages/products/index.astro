@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { all } from '../../lib/site';
+const products = (await all('products')).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt);
+const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
+---
+<Base title="全部產品" description="月奈創角收錄的所有產品知識頁，依最後更新排序。" crumbs={[{ name: '全部產品', path: '/products/' }]}>
+  <div class="shell">
+    <header class="page-hd"><p class="kicker">產品</p><h1>全部產品</h1></header>
+    <div class="grid cards">{products.map((p) => <ProductCard product={p} brand={brands.get(p.data.brand.id)} />)}</div>
+  </div>
+</Base>

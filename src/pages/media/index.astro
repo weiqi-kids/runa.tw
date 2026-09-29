@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import { all, path, ymd, MEDIA_LABEL } from '../../lib/site';
+// 影音不是獨立內容：每一支都掛在某個產品底下，這頁只是把它們彙整起來，點進去一律回到產品頁。
+const products = await all('products');
+const items = products.flatMap((p) => p.data.media.map((m) => ({ ...m, product: p })))
+  .sort((a, b) => +(b.uploadDate ?? 0) - +(a.uploadDate ?? 0));
+const platforms = Object.keys(MEDIA_LABEL) as (keyof typeof MEDIA_LABEL)[];
+---
+<Base title="影音" description="月奈創角的 YouTube、Instagram、Shorts 與 Reels 產品實測，每支影片都連回完整的產品知識頁。" crumbs={[{ name: '影音', path: '/media/' }]}>
+  <div class="shell">
+    <header class="page-hd"><p class="kicker">影音</p><h1>影音嚴選</h1>
+      <p class="lead">每支影片都是某個產品的證據。看完影片，點產品名稱看完整分析、缺點與資料來源。</p></header>
+    <nav class="chips" aria-label="平台">
+      {platforms.map((pl) => <a href={`#${pl}`}>{MEDIA_LABEL[pl]}<span class="count">{items.filter((i) => i.platform === pl).length}</span></a>)}
+    </nav>
+    {items.length === 0 && <p class="muted block">目前還沒有掛上產品的影音。新影片上架時，會同時出現在對應的產品頁。</p>}
+    {platforms.map((pl) => {
+      const list = items.filter((i) => i.platform === pl);
+      return list.length > 0 && (
+        <section class="block" id={pl}>
+          <h2>{MEDIA_LABEL[pl]}</h2>
+          <ul class="media-list">{list.map((m) => (
+            <li><a href={m.url} target="_blank" rel="noopener">{m.title}</a>
+              <span class="muted">・<a href={path.product(m.product.id)}>{m.product.data.name}</a>{m.uploadDate && <>・{ymd(m.uploadDate)}</>}</span></li>))}</ul>
+        </section>
+      );
+    })}
+  </div>
+</Base>

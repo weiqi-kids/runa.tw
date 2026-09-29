@@ -1,0 +1,75 @@
+---
+import { getEntries, getEntry, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Answer from '../../components/Answer.astro';
+import Faq from '../../components/Faq.astro';
+import Sources from '../../components/Sources.astro';
+import { all, path, isDraft } from '../../lib/site';
+
+export async function getStaticPaths() {
+  return (await all('comparisons')).map((c) => ({ params: { slug: c.id }, props: { cmp: c } }));
+}
+const { cmp } = Astro.props as { cmp: CollectionEntry<'comparisons'> };
+const d = cmp.data;
+const { Content } = await render(cmp);
+const products = await getEntries(d.products);
+const picks = await Promise.all(d.pickIf.map(async (p) => ({ ...p, entry: await getEntry(p.product) })));
+const category = await getEntry(products[0].data.category);
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const jsonLd: object[] = [{
+  '@context': 'https://schema.org', '@type': 'ItemList', name: d.title,
+  numberOfItems: products.length,
+  itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.data.name, url: `${site}${path.product(p.id)}` })),
+}];
+if (d.faq.length) jsonLd.push({
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+});
+---
+<Base title={d.title} description={d.answer} draft={isDraft(cmp)} jsonLd={jsonLd}
+  crumbs={[{ name: '產品比較', path: '/comparisons/' }, { name: d.title, path: path.comparison(cmp.id) }]}>
+  <article class="shell">
+    <header class="page-hd">
+      <p class="kicker"><a href={path.category(category.id)}>{category.data.name}</a>・比較</p>
+      <h1>{d.title}</h1>
+    </header>
+    <Answer text={d.answer} updatedAt={d.updatedAt} sources={d.sources.length} label="直接回答" />
+
+    <section class="block">
+      <h2>逐項比較</h2>
+      <div class="table-wrap">
+        <table class="data cmp">
+          <thead>
+            <tr>
+              <th scope="col">項目</th>
+              {products.map((p) => <th scope="col"><a href={path.product(p.id)}>{p.data.name}</a></th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {d.rows.map((r) => (
+              <tr>
+                <th scope="row">{r.label}</th>
+                {r.values.map((v, i) => <td class={r.winner === i ? 'win' : undefined}>{v}{r.winner === i && <span class="sr-only">（此項較佳）</span>}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted small">底色標示該項較佳者；沒有標示代表差異不足以分出高下，或取決於個人需求。</p>
+    </section>
+
+    <section class="block">
+      <h2>如果你是……</h2>
+      <ul class="pick-if">
+        {picks.map((p) => (
+          <li><span>{p.if}</span><span aria-hidden="true">→</span><a href={path.product(p.entry.id)}>{p.entry.data.name}</a></li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="block prose"><Content /></section>
+    <Faq items={d.faq} />
+    <Sources items={d.sources} />
+  </article>
+</Base>

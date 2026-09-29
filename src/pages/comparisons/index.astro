@@ -1,0 +1,22 @@
+---
+import { getEntries } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { all, path } from '../../lib/site';
+const cmps = await Promise.all((await all('comparisons')).map(async (c) => ({ c, products: await getEntries(c.data.products) })));
+---
+<Base title="產品比較" description="A 還是 B？月奈創角的產品比較直接回答哪個適合你，逐項列出差異與出處。" crumbs={[{ name: '產品比較', path: '/comparisons/' }]}>
+  <div class="shell">
+    <header class="page-hd"><p class="kicker">產品比較</p><h1>A 還是 B？直接回答</h1>
+      <p class="lead">每一頁都有逐項比較表與「如果你是……就選……」。價格、功能、適用族群都在同一張表裡，不拆成薄頁。</p></header>
+    <ul class="cmp-list">
+      {cmps.map(({ c, products }) => (
+        <li>
+          <a href={path.comparison(c.id)}>
+            <strong>{c.data.title}</strong>
+            <span class="muted">{products.map((p) => p.data.name).join(' ／ ')}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>

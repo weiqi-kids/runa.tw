@@ -1,0 +1,53 @@
+# 建置並部署到 GitHub Pages（自訂網域 runa.tw，見 public/CNAME）。
+# 這裡建的是正式站：PUBLIC_SITE_STAGE=production 打開 robots 與收錄；草稿頁照樣 noindex。
+# GA 與 Search Console 的值放 repository variables（vars，不是 secrets——
+# 它們本來就會出現在每一頁的原始碼裡）。沒設就什麼都不輸出。
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write      # 部署
+  id-token: write   # deploy-pages 的 OIDC
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false   # 部署到一半被砍會留下半套產出
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TZ: Asia/Taipei
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4          # 版本讀 package.json 的 packageManager
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # 建置 → 站內連結 → 測試（字級、hex、草稿不收錄），任何一步沒過就不部署
+      - name: 建置與檢查
+        env:
+          PUBLIC_SITE_STAGE: production
+          PUBLIC_SITE_URL: https://runa.tw
+          RUNA_GA_ID: ${{ vars.RUNA_GA_ID }}
+          RUNA_GSC_TOKEN: ${{ vars.RUNA_GSC_TOKEN }}
+        run: pnpm verify
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - uses: actions/deploy-pages@v4
+        id: deploy

@@ -1,0 +1,52 @@
+---
+import { getEntries, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Answer from '../../components/Answer.astro';
+import Faq from '../../components/Faq.astro';
+import Sources from '../../components/Sources.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { all, path, ymd, isDraft } from '../../lib/site';
+
+export async function getStaticPaths() {
+  return (await all('guides')).map((g) => ({ params: { slug: g.id }, props: { guide: g } }));
+}
+const { guide } = Astro.props as { guide: CollectionEntry<'guides'> };
+const d = guide.data;
+const { Content } = await render(guide);
+const products = await getEntries(d.products);
+const categories = await getEntries(d.categories);
+const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const jsonLd: object[] = [{
+  '@context': 'https://schema.org', '@type': 'Article',
+  headline: d.title, description: d.answer, inLanguage: 'zh-Hant-TW',
+  datePublished: ymd(d.publishedAt), dateModified: ymd(d.updatedAt),
+  author: { '@type': 'Organization', name: '月奈創角', url: `${site}/` },
+  publisher: { '@id': `${site}/#org` },
+  mainEntityOfPage: `${site}${path.guide(guide.id)}`,
+}];
+if (d.faq.length) jsonLd.push({
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+});
+---
+<Base title={d.title} description={d.answer} draft={isDraft(guide)} jsonLd={jsonLd}
+  crumbs={[{ name: '深度選品', path: '/guides/' }, { name: d.title, path: path.guide(guide.id) }]}>
+  <article class="shell">
+    <header class="page-hd">
+      <p class="kicker">{d.kind}{categories.map((c) => <>・<a href={path.category(c.id)}>{c.data.name}</a></>)}</p>
+      <h1>{d.title}</h1>
+    </header>
+    <Answer text={d.answer} updatedAt={d.updatedAt} sources={d.sources.length} />
+    <section class="block prose"><Content /></section>
+    {products.length > 0 && (
+      <section class="block">
+        <h2>本文提到的產品</h2>
+        <div class="grid cards">{products.map((p) => <ProductCard product={p} brand={brands.get(p.data.brand.id)} />)}</div>
+      </section>
+    )}
+    <Faq items={d.faq} />
+    <Sources items={d.sources} />
+  </article>
+</Base>

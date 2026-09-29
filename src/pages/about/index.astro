@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import { TAGLINE } from '../../lib/site';
+---
+<Base title="關於月奈創角" description={TAGLINE} crumbs={[{ name: '關於', path: '/about/' }]}>
+  <article class="shell">
+    <header class="page-hd"><p class="kicker">關於</p><h1>關於月奈創角</h1>
+      <p class="lead">{TAGLINE}</p></header>
+    <section class="block prose">
+      <p>月奈創角不是「AI 幫你推薦商品」。AI 很會把商品找出來，但一個商品值不值得買，要有人把官網原文讀完、把組合內容逐項列出來、把價格自己算一次、把缺點寫清楚。這是我們做的事。</p>
+      <p>網站的每一個產品都是一頁持續更新的知識頁，而不是一篇寫完就不管的文章。品類頁、需求頁、比較頁都從這些產品頁長出來，所以同一個事實只寫一次、只改一處。</p>
+    </section>
+    <div class="grid three block">
+      <a class="tile" href="/about/method/"><strong>選品方法</strong><span>我們怎麼研究一個產品</span></a>
+      <a class="tile" href="/about/criteria/"><strong>評選標準</strong><span>什麼樣的產品會入選、什麼不會</span></a>
+      <a class="tile" href="/about/sources/"><strong>資料來源</strong><span>我們引用什麼、怎麼標示</span></a>
+    </div>
+    <section class="block" id="contact">
+      <h2>聯絡我們</h2>
+      <p class="muted">聯絡方式整理中。</p>
+    </section>
+  </article>
+</Base>

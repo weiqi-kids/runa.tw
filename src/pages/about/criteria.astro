@@ -1,0 +1,34 @@
+---
+import Base from '../../layouts/Base.astro';
+const yes = [
+  '能清楚說出「適合誰」與「不適合誰」',
+  '資訊公開：官網有完整的組合內容或規格',
+  '價格可查證：有官方售價與查閱日期',
+];
+const no = [
+  '只能用宣稱描述、查不到任何規格或成分資訊的產品',
+  '要求我們只寫優點、不寫缺點的合作',
+  '無法說明「比同類產品好在哪裡」的產品',
+];
+---
+<Base title="評選標準" description="什麼樣的產品會進入月奈創角的嚴選，什麼不會。"
+  crumbs={[{ name: '關於', path: '/about/' }, { name: '評選標準', path: '/about/criteria/' }]}>
+  <article class="shell">
+    <header class="page-hd"><p class="kicker">關於</p><h1>評選標準</h1></header>
+    <section class="block two">
+      <div class="fit fit-yes"><h2>會入選</h2><ul>{yes.map((x) => <li>{x}</li>)}</ul></div>
+      <div class="fit fit-no"><h2>不會入選</h2><ul>{no.map((x) => <li>{x}</li>)}</ul></div>
+    </section>
+    <section class="block prose">
+      <h2>嚴選標籤的意思</h2>
+      <ul>
+        <li><strong>最新嚴選</strong>：近期新增的產品。</li>
+        <li><strong>本月嚴選</strong>：本月份值得優先看的產品。</li>
+        <li><strong>編輯嚴選</strong>：編輯認為在該品類最不容易選錯的產品。</li>
+        <li><strong>黑科技</strong>：用了少見技術、值得了解的產品。</li>
+        <li><strong>冷門好物</strong>：知名度低但實用的產品。</li>
+        <li><strong>值得關注</strong>：還在觀察、尚未下結論的產品。</li>
+      </ul>
+    </section>
+  </article>
+</Base>

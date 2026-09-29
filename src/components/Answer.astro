@@ -1,0 +1,15 @@
+---
+// 可引用摘要：頁首一兩句直接回答，附資料日期與來源數。純 HTML、不靠 JS，
+// 這是生成式引擎最常整段引用的地方，所以措辭要能脫離本頁獨立成立。
+import { ymd } from '../lib/site';
+interface Props { text: string; updatedAt: Date; sources?: number; label?: string }
+const { text, updatedAt, sources = 0, label = '重點結論' } = Astro.props;
+---
+<section class="answer" aria-label={label}>
+  <p class="answer-label">{label}</p>
+  <p class="answer-text">{text}</p>
+  <p class="answer-meta">
+    資料更新 <time datetime={ymd(updatedAt)}>{ymd(updatedAt)}</time>
+    {sources > 0 ? <>・{sources} 筆資料來源（見頁尾）</> : <>・尚無外部來源</>}
+  </p>
+</section>

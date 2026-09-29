@@ -1,0 +1,23 @@
+{
+  "name": "runa-tw",
+  "version": "0.1.0",
+  "description": "月奈創角｜AI產品嚴選：選品網站與產品知識庫",
+  "type": "module",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "sync:tokens": "node scripts/sync-tokens.mjs",
+    "links": "node scripts/check-links.mjs",
+    "test": "node --test \"test/**/*.test.mjs\"",
+    "verify": "astro build && node scripts/check-links.mjs && node --test \"test/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.5"
+  },
+  "packageManager": "pnpm@10.32.1"
+}

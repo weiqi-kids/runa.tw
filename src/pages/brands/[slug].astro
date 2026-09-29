@@ -1,0 +1,36 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { all, path } from '../../lib/site';
+
+export async function getStaticPaths() {
+  return (await all('brands')).map((b) => ({ params: { slug: b.id }, props: { brand: b } }));
+}
+const { brand } = Astro.props as { brand: CollectionEntry<'brands'> };
+const d = brand.data;
+const products = (await all('products')).filter((p) => p.data.brand.id === brand.id);
+const site = Astro.site!.toString().replace(/\/$/, '');
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'Brand', name: d.name, description: d.summary,
+  ...(d.website ? { url: d.website } : {}),
+  '@id': `${site}${path.brand(brand.id)}#brand`,
+}];
+// 品牌頁本身沒有查證內容，只有在旗下有已發布產品時才收錄
+const draft = products.every((p) => p.data.status !== 'published');
+---
+<Base title={`${d.name} 品牌`} description={d.summary} draft={draft} jsonLd={jsonLd}
+  crumbs={[{ name: '品牌', path: '/categories/' }, { name: d.name, path: path.brand(brand.id) }]}>
+  <article class="shell">
+    <header class="page-hd">
+      <p class="kicker">品牌{d.country && <>・{d.country}</>}</p>
+      <h1>{d.name}</h1>
+      <p class="lead">{d.summary}</p>
+      {d.website && <p><a href={d.website} rel="nofollow noopener" target="_blank">官方網站 ↗</a></p>}
+    </header>
+    <section class="block">
+      <h2>月奈創角收錄的 {d.name} 產品</h2>
+      <div class="grid cards">{products.map((p) => <ProductCard product={p} />)}</div>
+    </section>
+  </article>
+</Base>

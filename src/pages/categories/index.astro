@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import { all, path, CATEGORY_GROUPS } from '../../lib/site';
+const categories = await all('categories');
+const products = await all('products');
+const brands = await all('brands');
+const count = (id: string) => products.filter((p) => p.data.category.id === id).length;
+const groups = [...new Set([...CATEGORY_GROUPS, ...categories.map((c) => c.data.group)])]
+  .map((g) => ({ name: g, items: categories.filter((c) => c.data.group === g) }));
+---
+<Base title="找產品" description="依品類找產品：3C科技、AI工具、居家生活、親子育兒、美妝保養、健康生活、戶外旅行。" crumbs={[{ name: '找產品', path: '/categories/' }]}>
+  <div class="shell">
+    <header class="page-hd"><p class="kicker">找產品</p><h1>依品類找產品</h1>
+      <p class="lead">每個品類頁先回答「怎麼選」，再列出嚴選與比較。</p></header>
+    <div class="groups">
+      {groups.map((g) => (
+        <section class={`group${g.items.length ? '' : ' is-empty'}`}>
+          <h2>{g.name}</h2>
+          {g.items.length
+            ? <ul class="links">{g.items.map((c) => <li><a href={path.category(c.id)}>{c.data.name}</a> <span class="muted">{count(c.id)} 項</span></li>)}</ul>
+            : <p class="muted">整理中</p>}
+        </section>
+      ))}
+    </div>
+    <section class="block">
+      <h2>品牌</h2>
+      <ul class="chips">{brands.map((b) => <li><a href={path.brand(b.id)}>{b.data.name}</a></li>)}</ul>
+    </section>
+  </div>
+</Base>

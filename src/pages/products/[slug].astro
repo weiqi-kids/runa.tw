@@ -1,0 +1,249 @@
+---
+import { getEntry, getEntries, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Faq from '../../components/Faq.astro';
+import Sources from '../../components/Sources.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Share from '../../components/Share.astro';
+import { showcase, COUPON } from '../../lib/showcase';
+import { all, path, twd, ymd, isDraft, MEDIA_LABEL } from '../../lib/site';
+import { PICKS } from '../../content.config';
+
+export async function getStaticPaths() {
+  return (await all('products')).map((p) => ({ params: { slug: p.id }, props: { product: p } }));
+}
+const { product } = Astro.props as { product: CollectionEntry<'products'> };
+const d = product.data;
+const { Content } = await render(product);
+const brand = await getEntry(d.brand);
+const category = await getEntry(d.category);
+const needs = await getEntries(d.needs);
+const competitors = await getEntries(d.competitors);
+const comparisons = (await all('comparisons')).filter((c) => c.data.products.some((p) => p.id === product.id));
+const draft = isDraft(product);
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const url = `${site}${path.product(product.id)}`;
+const list = (items: string[]) => ({
+  '@type': 'ItemList',
+  itemListElement: items.map((name, i) => ({ '@type': 'ListItem', position: i + 1, name })),
+});
+// Product + 編輯評論（pros/cons 走 positiveNotes / negativeNotes，Google 的編輯評論支援這組欄位）。
+// 只放頁面上看得到的欄位；沒有的就不輸出，不補預設值。
+const jsonLd: object[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    '@id': `${url}#product`,
+    name: d.name,
+    url,
+    description: d.verdict,
+    brand: { '@type': 'Brand', name: brand.data.name },
+    category: category.data.name,
+    ...(d.image ? { image: new URL(d.image, `${site}/`).toString() } : {}),
+    ...(d.price ? {
+      offers: {
+        '@type': 'Offer',
+        price: d.price.amount,
+        priceCurrency: d.price.currency,
+        url: d.buy[0]?.url ?? d.price.source,
+      },
+    } : {}),
+    review: {
+      '@type': 'Review',
+      author: { '@type': 'Organization', name: '月奈創角', url: `${site}/` },
+      datePublished: ymd(d.publishedAt),
+      reviewBody: d.verdict,
+      positiveNotes: list(d.pros),
+      negativeNotes: list(d.cons),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    url,
+    name: d.name,
+    inLanguage: 'zh-Hant-TW',
+    datePublished: ymd(d.publishedAt),
+    dateModified: ymd(d.updatedAt),
+    about: { '@id': `${url}#product` },
+  },
+  ...d.media.filter((m) => m.uploadDate && m.thumbnail).map((m) => ({
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: m.title,
+    contentUrl: m.url,
+    uploadDate: ymd(m.uploadDate!),
+    thumbnailUrl: m.thumbnail,
+    description: `${d.name}：${m.title}`,
+  })),
+];
+if (d.faq.length) jsonLd.push({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+});
+
+const { pickIf } = await showcase();
+const hero = d.image ?? '/images/korena/mood-gold.jpg';
+const gallery = [...new Set([hero, '/images/korena/promo.jpg', '/images/korena/set-5.png', '/images/korena/mood-gold.jpg'])].slice(0, 3);
+const buy = d.buy[0];
+// 折扣碼只掛在同一檔活動的產品上（以購買連結網址判斷，不另設欄位）
+const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
+
+---
+<Base
+  title={d.name}
+  description={d.verdict}
+  draft={draft}
+  image={hero}
+  crumbs={[
+    { name: category.data.group, path: '/categories/' },
+    { name: category.data.name, path: path.category(category.id) },
+    { name: d.name, path: path.product(product.id) },
+  ]}
+  jsonLd={jsonLd}
+>
+  <div class="a-shell a-prod">
+    <div class="a-prod-media">
+      <figure class="a-polaroid">
+        <span class="a-tape"></span>
+        <img src={hero} alt={d.name} width="600" height="750" />
+        <figcaption>{brand.data.name} ✦ 月奈嚴選</figcaption>
+      </figure>
+      <div class="a-thumbs">{gallery.map((g) => <img src={g} alt="" loading="lazy" width="96" height="96" />)}</div>
+    </div>
+
+    <div>
+      <p>
+        <a class="a-chip" href={path.brand(brand.id)}>{brand.data.name}</a>
+        {d.picks.map((k) => <> <a class="a-chip a-chip-mint" href={`/picks/#${k}`}>{PICKS[k]}</a></>)}
+      </p>
+      <h1>{d.name}</h1>
+      <div class="a-say"><p>{d.verdict}</p></div>
+
+      {d.price && <p class="a-bigprice">{twd(d.price.amount)}<small><a href={d.price.source} rel="nofollow noopener" target="_blank">{ymd(d.price.asOf)} 官網價</a></small></p>}
+      {coupon && (
+        <div class="a-ticket">
+          <div>
+            <strong>{coupon.note}・結帳輸入折扣碼再折 {twd(coupon.off)}</strong>
+            <code>{coupon.code}</code>
+          </div>
+          <button type="button" data-copy={coupon.code} data-copy-label="複製折扣碼">複製折扣碼</button>
+        </div>
+      )}
+      <div class="a-cta-row">
+        {buy && <a class="a-btn a-btn-main" href={buy.url} target="_blank" rel={buy.affiliate ? 'sponsored noopener' : 'nofollow noopener'}>{buy.label} ↗</a>}
+        {buy?.affiliate && <span class="tag">聯盟連結</span>}
+        <a class="a-btn a-btn-ghost" href="#compare">跟其他組比比看</a>
+      </div>
+      <div style="margin-top:1.5rem"><Share url={`${site}${path.product(product.id)}`} text={`月奈推薦：${d.name}——${d.verdict}`} /></div>
+    </div>
+  </div>
+
+  <section class="a-sec a-band" id="why">
+    <div class="a-shell a-prod" style="padding:0">
+      <div>
+        <h2>為什麼月奈選它</h2>
+        <p>{d.whySelected}</p>
+      </div>
+      <div>
+        <h2>盒子裡有什麼</h2>
+        <ul class="a-list">{d.highlights.map((h) => <li>{h}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="a-sec" id="fit">
+    <div class="a-shell a-fit">
+      <div>
+        <h3>適合你，如果你是…</h3>
+        <ul>{d.fitFor.map((x) => <li>{x}</li>)}</ul>
+      </div>
+      <div>
+        <h3>先想一下，如果你是…</h3>
+        <ul>{[...d.notFitFor, ...d.cons].map((x) => <li>{x}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  {pickIf.some((p) => p.entry.id === product.id) && (
+    <section class="a-sec a-band a-band-butter" id="compare">
+      <div class="a-shell">
+        <header class="a-sec-hd"><h2>三組怎麼選？</h2>{comparisons[0] && <p><a href={path.comparison(comparisons[0].id)}>看完整比較表 →</a></p>}</header>
+        <div class="a-who">
+          {pickIf.map((p) => (
+            <a href={path.product(p.entry.id)} aria-current={p.entry.id === product.id ? 'page' : undefined}>
+              <span class="q">「{p.if}」</span>
+              <span class="ans">→ {p.entry.data.name}{p.entry.data.price && `・${twd(p.entry.data.price.amount)}`}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <div class="a-shell">
+    <section class="block prose" id="notes">
+      <Content />
+    </section>
+
+    {d.specs.length > 0 && (
+      <section class="block" id="specs">
+        <h2>規格與效期</h2>
+        <div class="table-wrap">
+          <table class="data">
+            <tbody>{d.specs.map((s) => <tr><th scope="row">{s.label}</th><td>{s.value}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <p class="muted small">取自品牌官網規格說明。</p>
+      </section>
+    )}
+
+    {d.media.length > 0 && (
+      <section class="block" id="media">
+        <h2>影音</h2>
+        <ul class="media-list">
+          {d.media.map((m) => <li><span class="tag">{MEDIA_LABEL[m.platform]}</span> <a href={m.url} target="_blank" rel="noopener">{m.title}</a></li>)}
+        </ul>
+      </section>
+    )}
+
+    <Faq items={d.faq} title="大家都在問" />
+
+    {competitors.length > 0 && (
+      <section class="block">
+        <h2>你可能也喜歡</h2>
+        <div class="grid cards">{competitors.map((p) => <ProductCard product={p} />)}</div>
+      </section>
+    )}
+
+    {needs.length > 0 && (
+      <section class="block">
+        <h2>相關需求</h2>
+        <ul class="chips">{needs.map((n) => <li><a href={path.need(n.id)}>{n.data.name}</a></li>)}</ul>
+      </section>
+    )}
+
+    <Sources items={d.sources} />
+
+    <section class="block" id="changelog">
+      <h2>更新紀錄</h2>
+      <ul class="changelog">
+        {[...d.changelog].sort((a, b) => +b.date - +a.date).map((c) => (
+          <li><time datetime={ymd(c.date)}>{ymd(c.date)}</time>　{c.note}</li>
+        ))}
+      </ul>
+      <p class="muted small">首次發布 {ymd(d.publishedAt)}・最後更新 {ymd(d.updatedAt)}</p>
+    </section>
+  </div>
+
+  {d.price && buy && (
+    <div class="a-sticky">
+      <div class="a-shell">
+        <span><b>{twd(d.price.amount)}</b>{coupon && <>　折扣碼 <code>{coupon.code}</code> 再折 {twd(coupon.off)}</>}</span>
+        <a class="a-btn a-btn-main" href={buy.url} target="_blank" rel={buy.affiliate ? 'sponsored noopener' : 'nofollow noopener'}>去官網 ↗</a>
+      </div>
+    </div>
+  )}
+</Base>

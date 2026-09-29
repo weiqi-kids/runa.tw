@@ -1,0 +1,95 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Answer from '../../components/Answer.astro';
+import Faq from '../../components/Faq.astro';
+import Sources from '../../components/Sources.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { all, path, isDraft } from '../../lib/site';
+
+export async function getStaticPaths() {
+  return (await all('categories')).map((c) => ({ params: { slug: c.id }, props: { category: c } }));
+}
+const { category } = Astro.props as { category: CollectionEntry<'categories'> };
+const d = category.data;
+const { Content } = await render(category);
+const products = (await all('products')).filter((p) => p.data.category.id === category.id);
+const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
+const ids = new Set(products.map((p) => p.id));
+const comparisons = (await all('comparisons')).filter((c) => c.data.products.some((p) => ids.has(p.id)));
+const guides = (await all('guides')).filter((g) => g.data.categories.some((c) => c.id === category.id));
+const needs = (await all('needs')).filter((n) => n.data.problems.some((p) => p.categories.some((c) => c.id === category.id)));
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const jsonLd: object[] = [];
+if (products.length) jsonLd.push({
+  '@context': 'https://schema.org', '@type': 'ItemList', name: `${d.name}嚴選`,
+  numberOfItems: products.length,
+  itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.data.name, url: `${site}${path.product(p.id)}` })),
+});
+if (d.faq.length) jsonLd.push({
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+});
+---
+<Base title={`${d.name}怎麼選`} description={d.answer} draft={isDraft(category)} jsonLd={jsonLd}
+  crumbs={[{ name: '找產品', path: '/categories/' }, { name: d.name, path: path.category(category.id) }]}>
+  <article class="shell">
+    <header class="page-hd">
+      <p class="kicker">{d.group}・品類</p>
+      <h1>{d.name}怎麼選？</h1>
+    </header>
+    <Answer text={d.answer} updatedAt={d.updatedAt} sources={d.sources.length} />
+
+    {d.whoNeedsIt.length > 0 && (
+      <section class="block">
+        <h2>什麼人適合買</h2>
+        <ul class="checks">{d.whoNeedsIt.map((w) => <li>{w}</li>)}</ul>
+      </section>
+    )}
+
+    <section class="block">
+      <h2>月奈創角嚴選</h2>
+      {products.length
+        ? <div class="grid cards">{products.map((p) => <ProductCard product={p} brand={brands.get(p.data.brand.id)} />)}</div>
+        : <p class="muted">這個品類的嚴選還在整理中。</p>}
+    </section>
+
+    {comparisons.length > 0 && (
+      <section class="block">
+        <h2>產品比較</h2>
+        <ul class="links">{comparisons.map((c) => <li><a href={path.comparison(c.id)}>{c.data.title}</a></li>)}</ul>
+      </section>
+    )}
+
+    {d.howToChoose.length > 0 && (
+      <section class="block">
+        <h2>不同需求怎麼選</h2>
+        <ol class="steps">
+          {d.howToChoose.map((h) => <li><strong>{h.factor}</strong><p>{h.detail}</p></li>)}
+        </ol>
+      </section>
+    )}
+
+    {needs.length > 0 && (
+      <section class="block">
+        <h2>相關需求</h2>
+        <ul class="chips">{needs.map((n) => <li><a href={path.need(n.id)}>{n.data.name}</a></li>)}</ul>
+      </section>
+    )}
+
+    <Faq items={d.faq} />
+
+    <section class="block prose">
+      <Content />
+      {guides.length > 0 && (
+        <>
+          <h2>深入分析</h2>
+          <ul class="links">{guides.map((g) => <li><a href={path.guide(g.id)}>{g.data.title}</a></li>)}</ul>
+        </>
+      )}
+    </section>
+
+    <Sources items={d.sources} />
+  </article>
+</Base>

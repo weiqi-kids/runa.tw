@@ -1,0 +1,27 @@
+---
+// 分享列：LINE、Facebook、Threads、複製連結。台灣的轉傳主力是 LINE，放第一個。
+// 全部是單純的分享網址，不載入任何第三方 script、不追蹤。
+interface Props { url: string; text: string }
+const { url, text } = Astro.props;
+const u = encodeURIComponent(url);
+const t = encodeURIComponent(text);
+const links = [
+  { label: 'LINE', href: `https://social-plugins.line.me/lineit/share?url=${u}&text=${t}` },
+  { label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${u}` },
+  { label: 'Threads', href: `https://www.threads.net/intent/post?text=${t}%20${u}` },
+];
+---
+<div class="share share-a">
+  <span class="share-label">分享給朋友</span>
+  {links.map((l) => <a href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
+  <button type="button" data-copy={url}>複製連結</button>
+</div>
+<script>
+  for (const b of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+    b.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(b.dataset.copy!); b.textContent = '已複製 ✓'; }
+      catch { b.textContent = '請手動複製網址'; }
+      setTimeout(() => { b.textContent = b.dataset.copyLabel ?? '複製連結'; }, 2000);
+    });
+  }
+</script>

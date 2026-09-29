@@ -1,0 +1,8 @@
+---
+interface Props { title: string; kicker?: string; href?: string; more?: string }
+const { title, kicker, href, more = '看全部' } = Astro.props;
+---
+<header class="sec-hd">
+  <h2>{kicker && <span class="sec-icon" aria-hidden="true">{kicker}</span>}{title}</h2>
+  {href && <a class="more" href={href}>{more} →</a>}
+</header>

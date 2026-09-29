@@ -1,0 +1,21 @@
+---
+import { ymd } from '../lib/site';
+interface Props { items: { title: string; url: string; publisher?: string; accessedAt: Date }[] }
+const { items } = Astro.props;
+---
+<section class="block" id="sources">
+  <h2>資料來源</h2>
+  {items.length === 0
+    ? <p class="muted">尚無外部來源。本頁內容未經查證，請勿引用。</p>
+    : (
+      <ol class="sources">
+        {items.map((s) => (
+          <li>
+            <a href={s.url} rel="nofollow noopener" target="_blank">{s.title}</a>
+            {s.publisher && <span class="muted">・{s.publisher}</span>}
+            <span class="muted">・查閱於 <time datetime={ymd(s.accessedAt)}>{ymd(s.accessedAt)}</time></span>
+          </li>
+        ))}
+      </ol>
+    )}
+</section>

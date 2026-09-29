@@ -1,0 +1,70 @@
+---
+import { getEntries, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Answer from '../../components/Answer.astro';
+import Faq from '../../components/Faq.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { all, path, isDraft } from '../../lib/site';
+
+export async function getStaticPaths() {
+  return (await all('needs')).map((n) => ({ params: { slug: n.id }, props: { need: n } }));
+}
+const { need } = Astro.props as { need: CollectionEntry<'needs'> };
+const d = need.data;
+const problems = await Promise.all(d.problems.map(async (p) => ({
+  ...p,
+  cats: await getEntries(p.categories),
+  prods: await getEntries(p.products),
+})));
+const tagged = (await all('products')).filter((p) => p.data.needs.some((n) => n.id === need.id));
+const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
+const guides = (await all('guides')).filter((g) => g.data.needs.some((n) => n.id === need.id));
+
+const jsonLd: object[] = [];
+if (d.faq.length) jsonLd.push({
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+});
+---
+<Base title={`${d.name}，有哪些產品值得買？`} description={d.answer} draft={isDraft(need)} jsonLd={jsonLd}
+  crumbs={[{ name: '找需求', path: '/needs/' }, { name: d.name, path: path.need(need.id) }]}>
+  <article class="shell">
+    <header class="page-hd">
+      <p class="kicker">{d.group}・需求</p>
+      <h1>{d.name}，有哪些產品值得買？</h1>
+    </header>
+    <Answer text={d.answer} updatedAt={d.updatedAt} />
+
+    <section class="block">
+      <h2>你可能遇到的問題</h2>
+      <ol class="problems">
+        {problems.map((p) => (
+          <li class="problem">
+            <p class="problem-q">{p.problem}</p>
+            <p class="problem-a"><span class="kicker">解法</span>{p.solution}</p>
+            {p.cats.length > 0 && <ul class="chips">{p.cats.map((c) => <li><a href={path.category(c.id)}>{c.data.name}</a></li>)}</ul>}
+            {p.prods.length > 0 && (
+              <ul class="links">{p.prods.map((x) => <li><a href={path.product(x.id)}>{x.data.name}</a></li>)}</ul>
+            )}
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    {tagged.length > 0 && (
+      <section class="block">
+        <h2>嚴選產品</h2>
+        <div class="grid cards">{tagged.map((p) => <ProductCard product={p} brand={brands.get(p.data.brand.id)} />)}</div>
+      </section>
+    )}
+
+    {guides.length > 0 && (
+      <section class="block">
+        <h2>延伸閱讀</h2>
+        <ul class="links">{guides.map((g) => <li><a href={path.guide(g.id)}>{g.data.title}</a></li>)}</ul>
+      </section>
+    )}
+
+    <Faq items={d.faq} />
+  </article>
+</Base>
