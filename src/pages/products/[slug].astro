@@ -6,6 +6,7 @@ import Sources from '../../components/Sources.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import Share from '../../components/Share.astro';
 import { showcase, COUPON } from '../../lib/showcase';
+import { outbound } from '../../lib/affiliate';
 import { all, path, twd, ymd, isDraft, MEDIA_LABEL } from '../../lib/site';
 import { PICKS } from '../../content.config';
 
@@ -88,6 +89,7 @@ const { pickIf } = await showcase();
 const hero = d.image ?? '/images/korena/mood-gold.jpg';
 const gallery = [...new Set([hero, '/images/korena/promo.jpg', '/images/korena/set-5.png', '/images/korena/mood-gold.jpg'])].slice(0, 3);
 const buy = d.buy[0];
+const go = buy ? outbound(buy.url, brand) : null;
 // 折扣碼只掛在同一檔活動的產品上（以購買連結網址判斷，不另設欄位）
 const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
 
@@ -133,8 +135,8 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
         </div>
       )}
       <div class="a-cta-row">
-        {buy && <a class="a-btn a-btn-main" href={buy.url} target="_blank" rel={buy.affiliate ? 'sponsored noopener' : 'nofollow noopener'}>{buy.label} ↗</a>}
-        {buy?.affiliate && <span class="tag">聯盟連結</span>}
+        {buy && go && <a class="a-btn a-btn-main" href={go.href} target="_blank" rel={go.rel}>{buy.label} ↗</a>}
+        {go?.affiliate && <span class="tag" title="透過這個連結購買，月奈可能獲得分潤，不影響選品結論">聯盟連結</span>}
         <a class="a-btn a-btn-ghost" href="#compare">跟其他組比比看</a>
       </div>
       <div style="margin-top:1.5rem"><Share url={`${site}${path.product(product.id)}`} text={`月奈推薦：${d.name}——${d.verdict}`} /></div>
@@ -242,7 +244,7 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
     <div class="a-sticky">
       <div class="a-shell">
         <span><b>{twd(d.price.amount)}</b>{coupon && <>　折扣碼 <code>{coupon.code}</code> 再折 {twd(coupon.off)}</>}</span>
-        <a class="a-btn a-btn-main" href={buy.url} target="_blank" rel={buy.affiliate ? 'sponsored noopener' : 'nofollow noopener'}>去官網 ↗</a>
+        <a class="a-btn a-btn-main" href={go!.href} target="_blank" rel={go!.rel}>去官網 ↗</a>
       </div>
     </div>
   )}

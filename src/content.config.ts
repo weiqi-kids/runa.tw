@@ -63,6 +63,13 @@ const brands = defineCollection({
     country: z.string().optional(),
     website: z.string().url().optional(),
     summary: z.string(),
+    // 聯盟行銷。有設定的品牌，產品頁的購買按鈕會自動換成推廣連結並標示「聯盟連結」。
+    affiliate: z.object({
+      network: z.literal('ichannels'),
+      merchantId: z.number().int(),
+      terms: z.string(),            // 佣金條件，給自己看的紀錄（例：CPS 17.5%、Cookie 30 天）
+      checkedAt: date,
+    }).optional(),
     status,
   }),
 });
@@ -132,8 +139,8 @@ const products = defineCollection({
       source: z.string().url(),
       note: z.string().optional(),
     }).optional(),
-    // affiliate: true 的連結在頁面上會標「聯盟連結」並加 rel="sponsored"。
-    buy: z.array(z.object({ label: z.string(), url: z.string().url(), affiliate: z.boolean().default(false) })).default([]),
+    // 填品牌官網的原始網址。品牌有設 affiliate 時，頁面會自動轉成推廣連結（src/lib/affiliate.ts）。
+    buy: z.array(z.object({ label: z.string(), url: z.string().url() })).default([]),
 
     media: z.array(media).default([]),
     faq: z.array(faq).default([]),
