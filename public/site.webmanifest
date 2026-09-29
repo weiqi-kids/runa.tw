@@ -1,0 +1,11 @@
+{
+  "name": "月奈創角｜AI產品嚴選",
+  "short_name": "月奈嚴選",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#c42c63",
+  "background_color": "#fdf6ed",
+  "display": "standalone"
+}
