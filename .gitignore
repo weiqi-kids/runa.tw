@@ -9,3 +9,6 @@ dist/
 # 本機 Claude Code 設定
 .claude/settings.local.json
 .DS_Store
+
+# seo-ops 每日 SEO 數據（公開 repo，流量與搜尋數據不入版控）
+data/seo-daily/
