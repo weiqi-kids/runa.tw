@@ -1,4 +1,5 @@
 ---
+status: published
 name: KORENA 凍齡經典 11 件組
 brand: korena
 category: anti-aging-skincare-sets
@@ -52,6 +53,8 @@ sources:
 publishedAt: 2026-09-29
 updatedAt: 2026-09-29
 changelog:
+  - date: 2026-09-29
+    note: 發布。
   - date: 2026-09-29
     note: 建立頁面。組合內容、價格、效期取自官網；尚未實測。
 ---

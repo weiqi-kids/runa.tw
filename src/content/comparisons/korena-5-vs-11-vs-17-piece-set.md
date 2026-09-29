@@ -1,4 +1,5 @@
 ---
+status: published
 title: KORENA 5 入組、11 件組、17 件組怎麼選？
 products: [korena-caviar-5-piece-set, korena-classic-11-piece-set, korena-luxe-17-piece-set]
 answer: 只想試精華選 5 入組（NT$4,380，但沒有晚霜）；要精華＋晚霜＋煥顏露整套選 11 件組（NT$6,580）；確定會長期用、而且用得完兩套的才選 17 件組（NT$9,990）。價格為 2026-09-29 官網售價。

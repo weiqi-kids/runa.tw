@@ -45,3 +45,18 @@ test('開發建置全站 noindex、robots 全擋（反例測試）', { skip: isP
   assert.match(await read('index.html'), /<meta name="robots" content="noindex">/);
   assert.match(await read('robots.txt'), /^Disallow: \/$/m);
 });
+
+test('正式建置：published 頁可收錄、有 JSON-LD、在 sitemap 裡', { skip: !isProd }, async () => {
+  const drafts = new Set(await draftPaths());
+  const xml = await read('sitemap-0.xml');
+  for (const dir of ['products', 'categories', 'needs', 'comparisons', 'guides']) {
+    for (const f of (await readdir(path.resolve('src/content', dir))).filter((n) => n.endsWith('.md'))) {
+      const p = `/${dir}/${f.replace(/\.md$/, '')}/`;
+      if (drafts.has(p)) continue;
+      const html = await read(`${p}index.html`);
+      assert.doesNotMatch(html, /name="robots"/, `${p} 不該 noindex`);
+      assert.match(html, /application\/ld\+json/, `${p} 缺 JSON-LD`);
+      assert.ok(xml.includes(`${p}<`), `${p} 不在 sitemap`);
+    }
+  }
+});
