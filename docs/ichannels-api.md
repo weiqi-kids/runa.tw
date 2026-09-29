@@ -5,7 +5,7 @@
 
 ## runa.tw 目前的做法（2026-09-29）
 
-**Web API 金鑰還沒開通**：API 手冊右上角「您的key(金鑰)為」後面是空的，會員後台沒有自助申請入口（推測要聯絡 iChannels 客服開通，未查證：service@ichannels.com.tw、02-6613-5888#609）。
+**Web API 金鑰還沒拿到**：API 手冊右上角「您的key(金鑰)為」後面是空的。金鑰不用另外申請：官方《新手秘笈》（https://ichannels.my.canva.site）寫「資料填完才能拿金鑰」，要在「會員資料」完成手機認證、基本資料、推廣履歷、帳戶資料四項（https://www.ichannels.com.tw/sitemember_new/profile-setaccountstep.php）。2026-09-29 四項都未完成。
 
 所以購買連結改用不需要金鑰的 **Deep Link（新中央轉址）**，實作在 `src/lib/affiliate.ts`：
 
