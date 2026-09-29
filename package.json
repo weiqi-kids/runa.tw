@@ -14,7 +14,8 @@
     "links": "node scripts/check-links.mjs",
     "test": "node --test \"test/**/*.test.mjs\"",
     "verify": "astro build && node scripts/check-links.mjs && node --test \"test/**/*.test.mjs\"",
-    "seo": "node scripts/seo-status.mjs"
+    "seo": "node scripts/seo-status.mjs",
+    "picks": "node scripts/pick-candidates.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

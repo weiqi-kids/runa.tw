@@ -135,7 +135,7 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
         </div>
       )}
       <div class="a-cta-row">
-        {buy && go && <a class="a-btn a-btn-main" href={go.href} target="_blank" rel={go.rel}>{buy.label} ↗</a>}
+        {buy && go && <a class="a-btn a-btn-main" href={go.href} target="_blank" rel={go.rel} data-out={product.id} data-brand={brand.id} data-place="hero">{buy.label} ↗</a>}
         {go?.affiliate && <span class="tag" title="透過這個連結購買，月奈可能獲得分潤，不影響選品結論">聯盟連結</span>}
         <a class="a-btn a-btn-ghost" href="#compare">跟其他組比比看</a>
       </div>
@@ -244,8 +244,22 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
     <div class="a-sticky">
       <div class="a-shell">
         <span><b>{twd(d.price.amount)}</b>{coupon && <>　折扣碼 <code>{coupon.code}</code> 再折 {twd(coupon.off)}</>}</span>
-        <a class="a-btn a-btn-main" href={go!.href} target="_blank" rel={go!.rel}>去官網 ↗</a>
+        <a class="a-btn a-btn-main" href={go!.href} target="_blank" rel={go!.rel} data-out={product.id} data-brand={brand.id} data-place="sticky">去官網 ↗</a>
       </div>
     </div>
   )}
+  <script>
+    // 點購買按鈕送 GA 事件 buy_click（產品、品牌、位置、是否聯盟連結）。選品 SOP 用它判斷哪些產品真的有人想買。
+    // 開發建置沒有載入 GA，gtag 不存在時什麼都不做。
+    for (const a of document.querySelectorAll<HTMLAnchorElement>('[data-out]')) {
+      a.addEventListener('click', () => {
+        const g = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+        g?.('event', 'buy_click', {
+          product_id: a.dataset.out, brand_id: a.dataset.brand, placement: a.dataset.place,
+          affiliate: a.rel.includes('sponsored') ? 'yes' : 'no',
+          transport_type: 'beacon',
+        });
+      });
+    }
+  </script>
 </Base>

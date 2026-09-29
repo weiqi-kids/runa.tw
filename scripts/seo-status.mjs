@@ -5,6 +5,7 @@
 //   pnpm seo index        # sitemap＋逐頁抽查收錄
 //   pnpm seo traffic      # GSC 曝光點擊＋GA4 流量來源
 //   pnpm seo submit       # 提交（或重新提交）sitemap
+//   pnpm seo clicks       # 各產品購買按鈕點擊（GA 事件 buy_click）
 //
 // 存取方式：不下載金鑰。以 gcloud 使用者 token 模擬服務帳號 runa-index@runa-tw（GCP 專案 runa-tw），
 // token 不會印出來。先決條件：
@@ -12,48 +13,14 @@
 //   2. GSC「設定 → 使用者和權限」把服務帳號加為「完整」使用者
 //   3. GA4 資源「管理 → 資源存取管理」把服務帳號加為「編輯者」（Admin API 改設定要用到）
 
-import { execFileSync } from 'node:child_process';
-
-const SA = 'runa-index@runa-tw.iam.gserviceaccount.com';
-const SITE = 'sc-domain:runa.tw';
-const ORIGIN = 'https://runa.tw';
-// GA4 資源 ID（數字，不是 G- 開頭的評估 ID）。資源名稱 runa.tw，網站串流評估 ID G-7Z4DRRB2WM。
-const GA_PROPERTY = process.env.RUNA_GA_PROPERTY || '556506274';
+import { googleToken, SA, GSC_SITE as SITE, ORIGIN, GA_PROPERTY, period } from './lib/google.mjs';
 
 const only = process.argv[2] ?? 'all';
 const want = (s) => only === 'all' || only === s;
+const { start, end } = period(28);
 
-// GSC 資料有 2–3 天延遲，把今天算進去會看到假的下跌
-const iso = (d) => d.toISOString().slice(0, 10);
-const end = iso(new Date(Date.now() - 864e5));
-const start = iso(new Date(Date.now() - 28 * 864e5));
-
-const token = await (async () => {
-  let userToken;
-  try {
-    userToken = execFileSync('gcloud', ['auth', 'print-access-token'], { encoding: 'utf-8' }).trim();
-  } catch {
-    console.error('拿不到 gcloud token。先跑 `gcloud auth login`。');
-    process.exit(1);
-  }
-  const r = await fetch(
-    `https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${SA}:generateAccessToken`,
-    {
-      method: 'POST',
-      headers: { authorization: `Bearer ${userToken}`, 'content-type': 'application/json' },
-      body: JSON.stringify({
-        scope: ['https://www.googleapis.com/auth/webmasters', 'https://www.googleapis.com/auth/analytics.readonly'],
-        lifetime: '3600s',
-      }),
-    },
-  );
-  const j = await r.json();
-  if (!j.accessToken) {
-    console.error('模擬服務帳號失敗：', JSON.stringify(j).slice(0, 300));
-    process.exit(1);
-  }
-  return j.accessToken;
-})();
+let token;
+try { token = await googleToken(); } catch (e) { console.error(e.message); process.exit(1); }
 
 const call = async (method, url, body) => {
   const r = await fetch(url, {
@@ -167,6 +134,22 @@ if (want('traffic')) {
       console.log(`  ${pad(src, 28)} session ${pad(r.metricValues[0].value, 5)} 使用者 ${r.metricValues[1].value}${src === 'google / organic' ? '  ← 自然搜尋' : ''}`);
     }
   }
+}
+
+if (want('clicks')) {
+  console.log('\n===== 購買按鈕點擊（GA 事件 buy_click）=====');
+  const r = await api(`https://analyticsdata.googleapis.com/v1beta/properties/${GA_PROPERTY}:runReport`, {
+    dateRanges: [{ startDate: start, endDate: end }],
+    dimensions: [{ name: 'customEvent:product_id' }, { name: 'customEvent:placement' }],
+    metrics: [{ name: 'eventCount' }],
+    dimensionFilter: { filter: { fieldName: 'eventName', stringFilter: { value: 'buy_click' } } },
+    orderBys: [{ metric: { metricName: 'eventCount' }, desc: true }],
+    limit: 50,
+  });
+  if (r.error && /customEvent/.test(r.error.message ?? '')) console.log('  自訂維度（product_id 等）還沒生效：2026-09-29 建立，GA 通常要一段時間才能查詢，隔天再跑');
+  else if (r.error) console.log(`  ERROR ${r.error.code} ${r.error.message?.slice(0, 120)}`);
+  else if (!r.rows?.length) console.log('  期間內沒有點擊（自訂維度 2026-09-29 才建立，之前的點擊不會出現）');
+  else for (const x of r.rows) console.log(`  ${pad(x.dimensionValues[0].value, 40)} ${pad(x.dimensionValues[1].value, 8)} ${x.metricValues[0].value} 次`);
 }
 
 console.log('');

@@ -23,6 +23,11 @@ pnpm verify     # build → 站內連結檢查 → 測試（字級、hex、草�
 5. **網址發出就不變。** 檔名＝slug。改名要做 301。
 6. **YAML 陣列裡有千分位逗號要加引號**：`['NT$4,380']`，否則會被拆成兩個值。
 
+## 選品
+
+流程照 `docs/選品SOP.md`：`pnpm picks` 出候選（品牌條件 × 站上定位 × GSC／GA 需求），人工篩選後才建頁。
+品牌清單匯出在 `data/private/`（會員限定資料，不進版控）。
+
 ## 聯盟行銷
 
 購買按鈕由 `src/lib/affiliate.ts` 依品牌的 `affiliate` 設定自動轉成 iChannels 推廣連結（Deep Link，不需金鑰），頁面標「聯盟連結」、`rel="sponsored"`。
