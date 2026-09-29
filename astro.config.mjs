@@ -1,4 +1,5 @@
 import { readdirSync, readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
@@ -13,6 +14,7 @@ const COLLECTION_PATH = {
 };
 const drafts = new Set();
 const lastmod = new Map();
+const latest = (p, d) => { if (!lastmod.has(p) || lastmod.get(p) < d) lastmod.set(p, d); };
 const publishedBrands = new Set();
 for (const [dir, seg] of Object.entries(COLLECTION_PATH)) {
   const base = new URL(`./src/content/${dir}/`, import.meta.url);
@@ -23,8 +25,23 @@ for (const [dir, seg] of Object.entries(COLLECTION_PATH)) {
     // lastmod 取內容的 updatedAt，不取建置時間——每次 build 都刷新 lastmod，Google 會停止採信這個欄位
     const m = fm.match(/^updatedAt:\s*(\d{4}-\d{2}-\d{2})/m);
     if (m) lastmod.set(p, m[1]);
-    if (dir === 'products' && !drafts.has(p)) publishedBrands.add(fm.match(/^brand:\s*(\S+)/m)?.[1]);
+    if (dir === 'products' && !drafts.has(p)) {
+      const brand = fm.match(/^brand:\s*(\S+)/m)?.[1];
+      publishedBrands.add(brand);
+      if (m) latest(`/brands/${brand}/`, m[1]);
+    }
+    // 列表頁（/products/ 等）與全站彙整頁的內容就是 published 條目的集合：取其中最新的 updatedAt
+    if (m && !drafts.has(p)) { latest(`/${seg}/`, m[1]); latest('/', m[1]); }
   }
+}
+for (const p of ['/picks/', '/media/']) if (lastmod.has('/')) lastmod.set(p, lastmod.get('/'));
+// 關於頁是手寫的靜態頁：取原始檔最後一次 commit 的日期（查不到就不給，不拿建置時間充數）
+for (const f of readdirSync(new URL('./src/pages/about/', import.meta.url)).filter((n) => n.endsWith('.astro'))) {
+  const p = f === 'index.astro' ? '/about/' : `/about/${f.replace(/\.astro$/, '')}/`;
+  try {
+    const d = execFileSync('git', ['log', '-1', '--format=%cs', '--', `src/pages/about/${f}`], { encoding: 'utf-8' }).trim();
+    if (d) lastmod.set(p, d);
+  } catch { /* 沒有 git（例如 tarball 建置）就不給 lastmod */ }
 }
 // 品牌頁本身沒有查證內容：旗下沒有 published 產品時是 noindex（見 brands/[slug].astro），sitemap 也要排除
 for (const f of readdirSync(new URL('./src/content/brands/', import.meta.url)).filter((n) => n.endsWith('.md'))) {

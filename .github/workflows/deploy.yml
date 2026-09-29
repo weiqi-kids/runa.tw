@@ -29,6 +29,8 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0              # sitemap 的關於頁 lastmod 取原始檔最後 commit 日期，淺層 clone 會變成每次部署日
       - uses: pnpm/action-setup@v6          # 版本讀 package.json 的 packageManager
       - uses: actions/setup-node@v7
         with:
