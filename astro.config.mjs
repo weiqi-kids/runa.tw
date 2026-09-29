@@ -32,6 +32,17 @@ for (const f of readdirSync(new URL('./src/content/brands/', import.meta.url)).f
   if (!publishedBrands.has(id)) drafts.add(`/brands/${id}/`);
 }
 
+// /llms-full.txt 的實作放在 src/lib（不是 src/pages）：靠 injectRoute 掛路由，
+// 讓「給 LLM 的全文」跟其他站台資料組裝邏輯放在一起，不混進逐頁內容目錄。
+const llmsFull = {
+  name: 'llms-full-route',
+  hooks: {
+    'astro:config:setup': ({ injectRoute }) => {
+      injectRoute({ pattern: '/llms-full.txt', entrypoint: './src/lib/llms-full.ts', prerender: true });
+    },
+  },
+};
+
 export default defineConfig({
   site: SITE,
   trailingSlash: 'always',
@@ -44,5 +55,6 @@ export default defineConfig({
         return d ? { ...item, lastmod: d } : item;
       },
     }),
+    llmsFull,
   ],
 });
