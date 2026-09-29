@@ -127,27 +127,29 @@ pnpm picks --offline    # 沒有 gcloud 權限時，跳過 GSC／GA
 pnpm seo index     # 收錄：新頁有沒有被 Google 收進去
 pnpm seo traffic   # 曝光、點擊、查詢字詞、GA 流量來源
 pnpm seo clicks    # 各產品購買按鈕被點了幾次（GA 事件 buy_click）
+pnpm seo audience  # 讀者年齡、性別、興趣、裝置（Google 信號 2026-09-29 開啟）
 ```
 
 獎金目前只能在 iChannels 後台「查詢獎金」看，要等 Web API 金鑰開通才能自動拉。
 
 ### 8. 每月檢討（月奈＋Claude）
 
-跑一次 `pnpm seo traffic` 和 `pnpm seo clicks`，對照下面三件事：
+跑一次 `pnpm seo traffic`、`pnpm seo clicks`、`pnpm seo audience`，對照下面四件事：
 
 | 看到什麼 | 怎麼調 |
 |---|---|
 | 某分類的查詢字詞多，但站上產品少 | 那一類優先補產品；查詢字詞沒被歸類就補進 `QUERY_HINTS` |
 | 某產品頁曝光多、購買點擊少 | 檢查一句話結論和價格是否吸引人，考慮做比較頁 |
 | 某產品頁 60 天沒有曝光也沒有點擊 | 不刪頁（網址永久不變），但不再投入影音資源 |
+| 讀者的年齡、性別、興趣跟現有品類對不上 | 調 `FIT` 權重，往讀者興趣的分類挪 |
 
 調整 `FIT` 權重時，在下面的修訂紀錄記一筆原因。
 
 ## 待決
 
-- **Google 信號**：2026-09-29 決定開啟（GA 才有年齡、性別、興趣）。第一次啟用只能在 GA 後台手動按，API 做不到。
 - **iChannels Web API 金鑰**：會員後台沒有自助申請入口，要聯絡 iChannels（service@ichannels.com.tw、02-6613-5888#609）。開通後才能做成熟期的訂單分析。
 
 ## 修訂紀錄
 
 - 2026-09-29：初版。分類權重為初始設定，美妝保養最高（站上第一個品類），月奈確認沿用。
+- 2026-09-29：GA 開啟 Google 信號，每月檢討加看讀者輪廓（`pnpm seo audience`）。

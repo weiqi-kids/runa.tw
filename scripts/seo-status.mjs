@@ -6,6 +6,7 @@
 //   pnpm seo traffic      # GSC 曝光點擊＋GA4 流量來源
 //   pnpm seo submit       # 提交（或重新提交）sitemap
 //   pnpm seo clicks       # 各產品購買按鈕點擊（GA 事件 buy_click）
+//   pnpm seo audience     # 讀者輪廓：年齡、性別、興趣、裝置（年齡性別興趣要開 Google 信號，2026-09-29 已開）
 //
 // 存取方式：不下載金鑰。以 gcloud 使用者 token 模擬服務帳號 runa-index@runa-tw（GCP 專案 runa-tw），
 // token 不會印出來。先決條件：
@@ -150,6 +151,19 @@ if (want('clicks')) {
   else if (r.error) console.log(`  ERROR ${r.error.code} ${r.error.message?.slice(0, 120)}`);
   else if (!r.rows?.length) console.log('  期間內沒有點擊（自訂維度 2026-09-29 才建立，之前的點擊不會出現）');
   else for (const x of r.rows) console.log(`  ${pad(x.dimensionValues[0].value, 40)} ${pad(x.dimensionValues[1].value, 8)} ${x.metricValues[0].value} 次`);
+}
+
+if (want('audience')) {
+  console.log('\n===== 讀者輪廓（GA）=====');
+  console.log('  （GA 會隱藏人數太少的組別，新站前幾週多半是空的）');
+  for (const [dim, label] of [['userAgeBracket', '年齡'], ['userGender', '性別'], ['brandingInterest', '興趣'], ['deviceCategory', '裝置']]) {
+    const r = await api(`https://analyticsdata.googleapis.com/v1beta/properties/${GA_PROPERTY}:runReport`, {
+      dateRanges: [{ startDate: start, endDate: end }], dimensions: [{ name: dim }], metrics: [{ name: 'activeUsers' }],
+      orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }], limit: 10,
+    });
+    const rows = (r.rows ?? []).map((x) => `${x.dimensionValues[0].value} ${x.metricValues[0].value}`);
+    console.log(`  ${pad(label, 4)} ${r.error ? `ERROR ${r.error.message?.slice(0, 80)}` : rows.join('、') || '（尚無資料）'}`);
+  }
 }
 
 console.log('');
