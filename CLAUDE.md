@@ -41,3 +41,5 @@ push 到 `main` → `.github/workflows/deploy.yml` 以 `PUBLIC_SITE_STAGE=produc
 - 網域：`public/CNAME`＝`runa.tw`。DNS 在 GoDaddy（`domaincontrol.com`）：`@` 四筆 A 指 GitHub Pages，`www` CNAME 指 `weiqi-kids.github.io`。
 - GA4／GSC：repository variables `RUNA_GA_ID`（`G-` 開頭）、`RUNA_GSC_TOKEN`（`google-site-verification` 的 content 值）。改了要重新部署才生效：`gh workflow run deploy -R weiqi-kids/runa.tw`。
 - GA 只在正式建置輸出，本機預覽不送資料。
+- GSC 用「網域」資源 `sc-domain:runa.tw`（GoDaddy DNS 的 TXT 驗證）。
+- 現況查詢：`pnpm seo`（收錄、曝光、GA4 流量）、`pnpm seo submit`（提交 sitemap）。以 gcloud 使用者身分模擬服務帳號 `runa-index@runa-tw.iam.gserviceaccount.com`（GCP 專案 `runa-tw`），不下載金鑰。這份文件不寫現況數字，要看就跑指令。
