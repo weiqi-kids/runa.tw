@@ -16,7 +16,7 @@ const { Content } = await render(category);
 const products = (await listed('products')).filter((p) => p.data.category.id === category.id);
 const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
 const ids = new Set(products.map((p) => p.id));
-const comparisons = (await all('comparisons')).filter((c) => c.data.products.some((p) => ids.has(p.id)));
+const comparisons = (await listed('comparisons')).filter((c) => c.data.products.some((p) => ids.has(p.id)));
 const guides = (await all('guides')).filter((g) => g.data.categories.some((c) => c.id === category.id));
 const needs = (await all('needs')).filter((n) => n.data.problems.some((p) => p.categories.some((c) => c.id === category.id)));
 

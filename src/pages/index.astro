@@ -2,14 +2,14 @@
 import { getEntries } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Share from '../components/Share.astro';
-import { all, path, twd, ymd, SITE_NAME, TAGLINE } from '../lib/site';
+import { all, listed, path, twd, ymd, SITE_NAME, TAGLINE } from '../lib/site';
 import { showcase, SOCIAL, COUPON } from '../lib/showcase';
 import { PICKS } from '../content.config';
 
 const { brands, products, pickIf } = await showcase();
 const needs = await all('needs');
 const categories = await all('categories');
-const cmps = await Promise.all((await all('comparisons')).slice(0, 4).map(async (c) => ({ c, ps: await getEntries(c.data.products) })));
+const cmps = await Promise.all((await listed('comparisons')).slice(0, 4).map(async (c) => ({ c, ps: await getEntries(c.data.products) })));
 const guides = (await all('guides')).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt).slice(0, 3);
 const suggestions = [...needs.map((n) => n.data.name), ...categories.map((c) => c.data.name)].slice(0, 4);
 const site = Astro.site!.toString().replace(/\/$/, '');

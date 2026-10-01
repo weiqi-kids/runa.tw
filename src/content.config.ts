@@ -161,7 +161,7 @@ const comparisons = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/comparisons' }),
   schema: z.object({
     title: z.string(),
-    products: z.array(reference('products')).min(2).max(4),
+    products: z.array(reference('products')).min(2).max(6),
     answer: z.string(),
     // 比較表：每列一個維度，values 與 products 同順序
     rows: z.array(z.object({

@@ -12,7 +12,7 @@ export const GET: APIRoute = async () => {
     })),
     ...(await all('categories')).map((c) => ({ t: '品類', n: c.data.name, u: path.category(c.id), k: `${c.data.group} ${c.data.answer}` })),
     ...(await all('needs')).map((n) => ({ t: '需求', n: n.data.name, u: path.need(n.id), k: n.data.problems.map((p) => p.problem).join(' ') })),
-    ...(await all('comparisons')).map((c) => ({ t: '比較', n: c.data.title, u: path.comparison(c.id), k: c.data.answer })),
+    ...(await listed('comparisons')).map((c) => ({ t: '比較', n: c.data.title, u: path.comparison(c.id), k: c.data.answer })),
     ...(await all('guides')).map((g) => ({ t: '指南', n: g.data.title, u: path.guide(g.id), k: g.data.answer })),
     ...[...brands].map(([id, name]) => ({ t: '品牌', n: name, u: path.brand(id), k: '' })),
   ];

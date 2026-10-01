@@ -1,8 +1,8 @@
 ---
 import { getEntries } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import { all, path } from '../../lib/site';
-const cmps = await Promise.all((await all('comparisons')).map(async (c) => ({ c, products: await getEntries(c.data.products) })));
+import { all, listed, path } from '../../lib/site';
+const cmps = await Promise.all((await listed('comparisons')).map(async (c) => ({ c, products: await getEntries(c.data.products) })));
 ---
 <Base title="產品比較" description="A 還是 B？月奈創角的產品比較直接回答哪個適合你，逐項列出差異與出處。" crumbs={[{ name: '產品比較', path: '/comparisons/' }]}>
   <div class="shell">

@@ -7,7 +7,7 @@ import ProductCard from '../../components/ProductCard.astro';
 import Share from '../../components/Share.astro';
 import { showcase, COUPON } from '../../lib/showcase';
 import { outbound } from '../../lib/affiliate';
-import { all, path, twd, ymd, isDraft, MEDIA_LABEL } from '../../lib/site';
+import { all, listed, path, twd, ymd, isDraft, MEDIA_LABEL } from '../../lib/site';
 import { PICKS } from '../../content.config';
 
 export async function getStaticPaths() {
@@ -20,7 +20,7 @@ const brand = await getEntry(d.brand);
 const category = await getEntry(d.category);
 const needs = await getEntries(d.needs);
 const competitors = await getEntries(d.competitors);
-const comparisons = (await all('comparisons')).filter((c) => c.data.products.some((p) => p.id === product.id));
+const comparisons = (await listed('comparisons')).filter((c) => c.data.products.some((p) => p.id === product.id));
 const draft = isDraft(product);
 
 const site = Astro.site!.toString().replace(/\/$/, '');
