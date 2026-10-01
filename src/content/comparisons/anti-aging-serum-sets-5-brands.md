@@ -1,4 +1,5 @@
 ---
+status: published
 title: 抗老精華組合對比：KORENA、克蘭詩、品木宣言、雅詩蘭黛、蘭蔻、MEDITHERAPY
 products:
   - korena-caviar-5-piece-set
