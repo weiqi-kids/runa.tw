@@ -13,7 +13,7 @@ const cmps = await Promise.all((await listed('comparisons')).map(async (c) => ({
         <li>
           <a href={path.comparison(c.id)}>
             <strong>{c.data.title}</strong>
-            <span class="muted">{products.map((p) => p.data.name).join(' ／ ')}</span>
+            <span class="muted">{[...products.map((p) => p.data.name), ...c.data.externals.map((e) => e.name)].join(' ／ ')}</span>
           </a>
         </li>
       ))}

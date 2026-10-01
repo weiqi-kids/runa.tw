@@ -7,7 +7,7 @@ export async function showcase() {
   const products = (await listed('products')).sort((a, b) => (a.data.price?.amount ?? 0) - (b.data.price?.amount ?? 0));
   // 首頁與產品頁的「我適合哪一組」固定用 KORENA 三組比較
   const cmp = (await all('comparisons')).find((c) => c.id === 'korena-5-vs-11-vs-17-piece-set');
-  const pickIf = cmp ? await Promise.all(cmp.data.pickIf.map(async (p) => ({ ...p, entry: await getEntry(p.product) }))) : [];
+  const pickIf = cmp ? await Promise.all(cmp.data.pickIf.filter((p) => p.product).map(async (p) => ({ ...p, entry: await getEntry(p.product!) }))) : [];
   const cmpProducts = cmp ? await getEntries(cmp.data.products) : [];
   const needs = await all('needs');
   const guides = await all('guides');

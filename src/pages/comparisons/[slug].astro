@@ -13,14 +13,22 @@ const { cmp } = Astro.props as { cmp: CollectionEntry<'comparisons'> };
 const d = cmp.data;
 const { Content } = await render(cmp);
 const products = await getEntries(d.products);
-const picks = await Promise.all(d.pickIf.map(async (p) => ({ ...p, entry: await getEntry(p.product) })));
-const category = await getEntry(products[0].data.category);
+// 欄位：站上產品連到產品頁；站外產品只顯示名稱與品牌（不建頁、不放購買連結）
+const columns = [
+  ...products.map((p) => ({ name: p.data.name, href: path.product(p.id) as string | null })),
+  ...d.externals.map((e) => ({ name: e.name, href: null as string | null })),
+];
+const picks = await Promise.all(d.pickIf.map(async (p) => {
+  if (p.product) { const e = await getEntry(p.product); return { if: p.if, name: e.data.name, href: path.product(e.id) as string | null }; }
+  return { if: p.if, name: d.externals.find((x) => x.id === p.external)!.name, href: null as string | null };
+}));
+const category = products[0] ? await getEntry(products[0].data.category) : null;
 
 const site = Astro.site!.toString().replace(/\/$/, '');
 const jsonLd: object[] = [{
   '@context': 'https://schema.org', '@type': 'ItemList', name: d.title,
-  numberOfItems: products.length,
-  itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.data.name, url: `${site}${path.product(p.id)}` })),
+  numberOfItems: columns.length,
+  itemListElement: columns.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, ...(c.href ? { url: `${site}${c.href}` } : {}) })),
 }];
 if (d.faq.length) jsonLd.push({
   '@context': 'https://schema.org', '@type': 'FAQPage',
@@ -31,7 +39,7 @@ if (d.faq.length) jsonLd.push({
   crumbs={[{ name: '產品比較', path: '/comparisons/' }, { name: d.title, path: path.comparison(cmp.id) }]}>
   <article class="shell">
     <header class="page-hd">
-      <p class="kicker"><a href={path.category(category.id)}>{category.data.name}</a>・比較</p>
+      <p class="kicker">{category && <><a href={path.category(category.id)}>{category.data.name}</a>・</>}比較</p>
       <h1>{d.title}</h1>
     </header>
     <Answer text={d.answer} updatedAt={d.updatedAt} sources={d.sources.length} label="直接回答" />
@@ -43,7 +51,7 @@ if (d.faq.length) jsonLd.push({
           <thead>
             <tr>
               <th scope="col">項目</th>
-              {products.map((p) => <th scope="col"><a href={path.product(p.id)}>{p.data.name}</a></th>)}
+              {columns.map((c) => <th scope="col">{c.href ? <a href={c.href}>{c.name}</a> : c.name}</th>)}
             </tr>
           </thead>
           <tbody>
@@ -63,7 +71,7 @@ if (d.faq.length) jsonLd.push({
       <h2>如果你是……</h2>
       <ul class="pick-if">
         {picks.map((p) => (
-          <li><span>{p.if}</span><span aria-hidden="true">→</span><a href={path.product(p.entry.id)}>{p.entry.data.name}</a></li>
+          <li><span>{p.if}</span><span aria-hidden="true">→</span>{p.href ? <a href={p.href}>{p.name}</a> : <strong>{p.name}</strong>}</li>
         ))}
       </ul>
     </section>

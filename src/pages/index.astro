@@ -111,7 +111,7 @@ const firstPick = (p: (typeof products)[number]) => p.data.picks[0];
       <header class="a-sec-hd"><h2>熱門比較</h2><a class="more" href="/comparisons/">看全部 →</a></header>
       <ul class="cmp-list">
         {cmps.map(({ c, ps }) => (
-          <li><a href={path.comparison(c.id)}><strong>{c.data.title}</strong><span class="muted">{ps.map((p) => p.data.name).join(' ／ ')}</span></a></li>
+          <li><a href={path.comparison(c.id)}><strong>{c.data.title}</strong><span class="muted">{[...ps.map((p) => p.data.name), ...c.data.externals.map((e) => e.name)].join(' ／ ')}</span></a></li>
         ))}
       </ul>
     </div>

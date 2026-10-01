@@ -69,7 +69,7 @@ export const GET: APIRoute = async ({ site }) => {
     return [
       `## 比較：${d.title}`, `網址：${o}${path.comparison(c.id)}`,
       `結論：${d.answer}`,
-      ...(d.pickIf.length ? ['', '怎麼選：', ...d.pickIf.map((pi) => `- ${pi.if} → 選 ${pi.product.id}`)] : []),
+      ...(d.pickIf.length ? ['', '怎麼選：', ...d.pickIf.map((pi) => `- ${pi.if} → 選 ${pi.product?.id ?? d.externals.find((e) => e.id === pi.external)?.name ?? pi.external}`)] : []),
       ...faqBlock(d.faq),
       '', c.body?.trim() ?? '',
       ...citeBlock(d.sources),

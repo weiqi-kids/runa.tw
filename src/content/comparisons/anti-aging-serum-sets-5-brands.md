@@ -2,10 +2,23 @@
 title: 抗老精華組合對比：KORENA、克蘭詩、品木宣言、雅詩蘭黛、蘭蔻
 products:
   - korena-caviar-5-piece-set
-  - clarins-double-serum-radiance-set
-  - origins-plantscription-retinol-95ml
-  - estee-lauder-anr-50ml-trio-set
-  - lancome-genifique-pro-215ml-set
+externals:
+  - id: clarins
+    name: 克蘭詩 黃金雙萃漾采美肌組
+    brand: Clarins 克蘭詩
+    url: https://www.clarins.com.tw/新品上市/黃金雙萃漾采美肌組-CS01837804.html
+  - id: origins
+    name: 品木宣言 駐顏有樹撫紋煥膚A醇精華 95ml
+    brand: ORIGINS 品木宣言
+    url: https://www.momoshop.com.tw/product/13709461
+  - id: estee
+    name: 雅詩蘭黛 小棕瓶修護鐵粉組
+    brand: Estée Lauder 雅詩蘭黛
+    url: https://www.esteelauder.com.tw/product/19045/151172/product-catalog/gifts/advanced-night-repair/50ml-trio-set
+  - id: lancome
+    name: 蘭蔻 小黑瓶PRO 買115ml送100ml
+    brand: Lancôme 蘭蔻
+    url: https://www.lancome.com.tw/保養/臉部保養/保養特惠組/A04639-LAC.html
 answer: 五個品牌都以一瓶主力精華為核心，差別在主打成分和組合方式：KORENA 與克蘭詩是「主力精華＋周邊品項」，品木宣言是 A 醇加大容量單瓶，雅詩蘭黛與蘭蔻是同一款精華大份量囤貨。功效欄位是各品牌官方說法，使用體驗待月奈實測後補上。價格為 2026-10-01 官方通路售價。
 rows:
   - label: 價格（2026-10-01）
@@ -68,13 +81,13 @@ pickIf:
   - if: 你想用最少的錢先試一個品牌的主力精華
     product: korena-caviar-5-piece-set
   - if: 你想要國際品牌、預算和 KORENA 入門組差不多
-    product: clarins-double-serum-radiance-set
+    external: clarins
   - if: 你想用 A 醇做晚間抗老
-    product: origins-plantscription-retinol-95ml
+    external: origins
   - if: 你已經在用小棕瓶，想一次囤貨
-    product: estee-lauder-anr-50ml-trio-set
+    external: estee
   - if: 你要同一款精華的最大份量，常出差需要小瓶
-    product: lancome-genifique-pro-215ml-set
+    external: lancome
 faq:
   - q: 哪一個每 ml 最便宜？
     a: 只算單一精華的三組裡，蘭蔻約 NT$41／ml 最低，雅詩蘭黛約 NT$48，品木宣言約 NT$58。KORENA 與克蘭詩的組合含其他品項，無法單算精華的每 ml 價格。

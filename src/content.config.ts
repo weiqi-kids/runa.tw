@@ -161,22 +161,30 @@ const comparisons = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/comparisons' }),
   schema: z.object({
     title: z.string(),
-    products: z.array(reference('products')).min(2).max(6),
+    // 站上的產品（有自己的產品頁）
+    products: z.array(reference('products')).default([]),
+    // 站外產品：只在比較表裡出現，不建產品頁、不放購買連結。url 是查證用的官方資料來源。
+    externals: z.array(z.object({ id: z.string(), name: z.string(), brand: z.string(), url: z.string().url() })).default([]),
     answer: z.string(),
-    // 比較表：每列一個維度，values 與 products 同順序
+    // 比較表：每列一個維度，values 依序對應 products 再接 externals
     rows: z.array(z.object({
       label: z.string(),
       values: z.array(z.string()),
-      winner: z.number().int().min(0).optional(),   // products 的索引；平手就不填
+      winner: z.number().int().min(0).optional(),   // 欄位索引；平手就不填
     })),
-    // 「如果你是 A → 選 X」
-    pickIf: z.array(z.object({ if: z.string(), product: reference('products') })).min(1),
+    // 「如果你是 A → 選 X」：product 指站上產品，external 指 externals[].id
+    pickIf: z.array(z.object({ if: z.string(), product: reference('products').optional(), external: z.string().optional() })
+      .refine((p) => !!p.product !== !!p.external, { message: 'pickIf 要嘛填 product，要嘛填 external' })).min(1),
     faq: z.array(faq).default([]),
     sources: z.array(source).default([]),
     updatedAt: date,
     status,
-  }).refine((c) => c.rows.every((r) => r.values.length === c.products.length), {
-    message: 'rows[].values 的數量要等於 products 的數量', path: ['rows'],
+  }).refine((c) => c.products.length + c.externals.length >= 2 && c.products.length + c.externals.length <= 6, {
+    message: '比較對象（products＋externals）要 2～6 個', path: ['products'],
+  }).refine((c) => c.rows.every((r) => r.values.length === c.products.length + c.externals.length), {
+    message: 'rows[].values 的數量要等於 products＋externals 的數量', path: ['rows'],
+  }).refine((c) => c.pickIf.every((p) => !p.external || c.externals.some((e) => e.id === p.external)), {
+    message: 'pickIf.external 要對應 externals[].id', path: ['pickIf'],
   }),
 });
 
