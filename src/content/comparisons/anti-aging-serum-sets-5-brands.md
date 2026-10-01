@@ -83,7 +83,7 @@ rows:
       - 4.3 星、13,060 則（2026-10-01）；抽樣 50 則中 88–90% 回報變平滑、提亮、毛孔改善，14% 有不良反應（爆痘 6%、刺激 8%）
   - label: 使用體驗（質地、吸收、刺激感）
     values:
-      - 月奈已實測，見產品頁「月奈怎麼看」
+      - 透明微金色凝露，水感滑順、延展性好；約 10 秒吸收、不黏膩；網路心得未見刺激反應
       - 待實測
       - 待實測
       - 待實測
@@ -147,6 +147,22 @@ sources:
   - title: 抗老精華比較報告：MEDITHERAPY vs celimax vs 專業競品
     url: https://ecommerce.weiqi.kids/Narrator/comparisons/anti-aging-serum--comparison--2026-02-11
     publisher: 電商評論分析（Amazon 評論 50 則抽樣）
+    accessedAt: 2026-10-01
+  - title: KORENA珂蕾娜-實測韓國超狂醫美級保養｜擦的魚子水光針
+    url: https://ibeautyreport.com/blog/MiniDaily/posts/697-korena
+    publisher: 美周報（MiniDaily）
+    accessedAt: 2026-10-01
+  - title: 【KORENA珂蕾娜評價】璀璨時空系列魚子金萃精華＋小藍鑽晚霜
+    url: https://msvicky.pixnet.net/blog/posts/16060293920
+    publisher: 薇琪小姐（痞客邦）
+    accessedAt: 2026-10-01
+  - title: KORENA｜7天實測有感！韓國魚子松露秘方頂奢護膚
+    url: https://ningl.tw/korena
+    publisher: 寗好生活 Ning's Life
+    accessedAt: 2026-10-01
+  - title: KORENA 珂蕾娜｜時空魚子金萃精華 × 小藍鑽晚霜開箱心得
+    url: https://vocus.cc/article/690957a8fd89780001e842eb
+    publisher: 萌蒂貓生活趣（方格子）
     accessedAt: 2026-10-01
 updatedAt: 2026-10-01
 ---
