@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Answer from '../../components/Answer.astro';
 import Faq from '../../components/Faq.astro';
 import ProductCard from '../../components/ProductCard.astro';
-import { all, path, isDraft } from '../../lib/site';
+import { all, listed, path, isDraft } from '../../lib/site';
 
 export async function getStaticPaths() {
   return (await all('needs')).map((n) => ({ params: { slug: n.id }, props: { need: n } }));
@@ -16,7 +16,7 @@ const problems = await Promise.all(d.problems.map(async (p) => ({
   cats: await getEntries(p.categories),
   prods: await getEntries(p.products),
 })));
-const tagged = (await all('products')).filter((p) => p.data.needs.some((n) => n.id === need.id));
+const tagged = (await listed('products')).filter((p) => p.data.needs.some((n) => n.id === need.id));
 const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
 const guides = (await all('guides')).filter((g) => g.data.needs.some((n) => n.id === need.id));
 

@@ -1,10 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ProductCard from '../../components/ProductCard.astro';
-import { all } from '../../lib/site';
+import { all, listed } from '../../lib/site';
 import { PICKS } from '../../content.config';
 
-const products = (await all('products')).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt);
+const products = (await listed('products')).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt);
 const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
 const sections = (Object.keys(PICKS) as (keyof typeof PICKS)[])
   .map((k) => ({ key: k, label: PICKS[k], items: products.filter((p) => p.data.picks.includes(k)) }));

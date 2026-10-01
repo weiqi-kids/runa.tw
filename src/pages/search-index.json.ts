@@ -1,12 +1,12 @@
 // 首頁搜尋框用的索引。站內搜尋照樣涵蓋草稿（站內使用者看得到草稿頁與橫幅），
 // 對外的 sitemap 與 llms.txt 才只列 published。
 import type { APIRoute } from 'astro';
-import { all, path } from '../lib/site';
+import { all, listed, path } from '../lib/site';
 
 export const GET: APIRoute = async () => {
   const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
   const rows = [
-    ...(await all('products')).map((p) => ({
+    ...(await listed('products')).map((p) => ({
       t: '產品', n: p.data.name, u: path.product(p.id),
       k: [brands.get(p.data.brand.id), p.data.verdict, ...p.data.fitFor, ...p.data.highlights].join(' '),
     })),

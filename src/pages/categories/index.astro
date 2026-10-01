@@ -1,9 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { all, path, CATEGORY_GROUPS } from '../../lib/site';
+import { all, listed, path, CATEGORY_GROUPS } from '../../lib/site';
 const categories = await all('categories');
-const products = await all('products');
-const brands = await all('brands');
+const products = await listed('products');
+// 品牌 chip 只列有可見產品的品牌
+const brands = (await all('brands')).filter((b) => products.some((p) => p.data.brand.id === b.id));
 const count = (id: string) => products.filter((p) => p.data.category.id === id).length;
 const groups = [...new Set([...CATEGORY_GROUPS, ...categories.map((c) => c.data.group)])]
   .map((g) => ({ name: g, items: categories.filter((c) => c.data.group === g) }));

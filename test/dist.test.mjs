@@ -60,3 +60,15 @@ test('正式建置：published 頁可收錄、有 JSON-LD、在 sitemap 裡', { 
     }
   }
 });
+
+test('正式建置：列表頁不連到草稿產品（草稿只能用直接網址打開）', { skip: !isProd }, async () => {
+  const drafts = (await draftPaths()).filter((p) => p.startsWith('/products/'));
+  const pages = ['index.html', 'picks/index.html', 'products/index.html', 'categories/index.html', 'search-index.json'];
+  for (const dir of ['categories', 'needs']) {
+    for (const d of await readdir(path.join(DIST, dir), { withFileTypes: true })) if (d.isDirectory()) pages.push(`${dir}/${d.name}/index.html`);
+  }
+  for (const pg of pages) {
+    const html = await read(pg);
+    for (const p of drafts) assert.ok(!html.includes(`"${p}"`) && !html.includes(`href="${p}`), `${pg} 連到草稿 ${p}`);
+  }
+});

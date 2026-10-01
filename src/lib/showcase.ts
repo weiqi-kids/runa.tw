@@ -1,10 +1,10 @@
 // 首頁與產品頁共用的展示資料：產品（依價格排序）、「我適合哪一組」、社群帳號、活動折扣碼。
 import { getEntry, getEntries } from 'astro:content';
-import { all, published } from './site';
+import { all, listed, published } from './site';
 
 export async function showcase() {
   const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
-  const products = (await all('products')).sort((a, b) => (a.data.price?.amount ?? 0) - (b.data.price?.amount ?? 0));
+  const products = (await listed('products')).sort((a, b) => (a.data.price?.amount ?? 0) - (b.data.price?.amount ?? 0));
   const cmp = (await all('comparisons'))[0];
   const pickIf = cmp ? await Promise.all(cmp.data.pickIf.map(async (p) => ({ ...p, entry: await getEntry(p.product) }))) : [];
   const cmpProducts = cmp ? await getEntries(cmp.data.products) : [];

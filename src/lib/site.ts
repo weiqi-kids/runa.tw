@@ -30,12 +30,16 @@ export const CATEGORY_GROUPS = ['3C科技', 'AI工具', '居家生活', '親子�
 export const isDraft = (e: { data: { status?: string } }) => e.data.status !== 'published';
 
 type Name = 'brands' | 'categories' | 'needs' | 'products' | 'comparisons' | 'guides';
-/** 站內頁面一律列出（含草稿，草稿會掛橫幅）；sitemap、llms.txt 另外只取 published。 */
+/** 每個頁面都會產生（含草稿，草稿會掛橫幅、noindex）；列表頁用 listed()，sitemap、llms.txt 只取 published。 */
 export async function all<N extends Name>(name: N): Promise<CollectionEntry<N>[]> {
   return getCollection(name);
 }
 export async function published<N extends Name>(name: N): Promise<CollectionEntry<N>[]> {
   return (await getCollection(name)).filter((e) => !isDraft(e as never));
+}
+/** 列表頁用：正式站只列 published（草稿只能用直接網址打開，給站主審閱）；本機開發建置全部列出。 */
+export async function listed<N extends Name>(name: N): Promise<CollectionEntry<N>[]> {
+  return IS_PRODUCTION ? published(name) : all(name);
 }
 
 export const path = {

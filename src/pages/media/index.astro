@@ -1,8 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { all, path, ymd, MEDIA_LABEL } from '../../lib/site';
+import { all, listed, path, ymd, MEDIA_LABEL } from '../../lib/site';
 // 影音不是獨立內容：每一支都掛在某個產品底下，這頁只是把它們彙整起來，點進去一律回到產品頁。
-const products = await all('products');
+const products = await listed('products');
 const items = products.flatMap((p) => p.data.media.map((m) => ({ ...m, product: p })))
   .sort((a, b) => +(b.uploadDate ?? 0) - +(a.uploadDate ?? 0));
 const platforms = Object.keys(MEDIA_LABEL) as (keyof typeof MEDIA_LABEL)[];
