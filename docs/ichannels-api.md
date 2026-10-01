@@ -5,7 +5,7 @@
 
 ## runa.tw 目前的做法（2026-09-29）
 
-**Web API 金鑰還沒拿到**：API 手冊右上角「您的key(金鑰)為」後面是空的。金鑰不用另外申請：官方《新手秘笈》（https://ichannels.my.canva.site）寫「資料填完才能拿金鑰」，要在「會員資料」完成手機認證、基本資料、推廣履歷、帳戶資料四項（https://www.ichannels.com.tw/sitemember_new/profile-setaccountstep.php）。2026-09-29 已填完，帳戶資料待審核，金鑰尚未出現。
+**Web API 金鑰已取得（2026-10-01）**：放在 `.env` 的 `ICHANNELS_KEY`，推廣代碼 `ICHANNELS_MEMBER_CODE`（`af` 開頭，會員後台頁面原始碼裡找得到）。金鑰要等會員資料四項都審核通過才會出現在 API 手冊右上角。
 
 所以購買連結改用不需要金鑰的 **Deep Link（新中央轉址）**，實作在 `src/lib/affiliate.ts`：
 
@@ -16,7 +16,8 @@ https://product.mchannles.com/redirect_wa.php?k=<K值>&tourl=<URL encode 後的�
 - K 值取自「推廣工具 → 網址自動轉換器 → 產生推廣碼」程式碼裡的 `oeya_member`，不是機密。
 - 只對「申請狀態＝可推廣」的品牌有效。品牌在 `src/content/brands/*.md` 設 `affiliate` 才會轉換。
 - 2026-09-29 實測 KORENA 商品頁：轉址 2 次後落在官網商品頁，網址帶追蹤參數 `gid`。中間轉址主機偶爾逾時。
-- 訂單／獎金報表要等 API 金鑰開通才能接（訂單 API）。
+- 訂單與獎金：`pnpm orders`（訂單 API）；已加入推廣的品牌：`pnpm orders brands`（品牌 API 只列加入過的品牌，完整清單仍要從後台匯出）。
+- API 只有 `http`，`https` 連不上（2026-10-01 實測）。
 
 ## 共通
 
