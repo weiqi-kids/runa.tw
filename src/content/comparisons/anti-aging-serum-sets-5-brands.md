@@ -1,5 +1,5 @@
 ---
-title: 抗老精華組合對比：KORENA、克蘭詩、品木宣言、雅詩蘭黛、蘭蔻
+title: 抗老精華組合對比：KORENA、克蘭詩、品木宣言、雅詩蘭黛、蘭蔻、MEDITHERAPY
 products:
   - korena-caviar-5-piece-set
 externals:
@@ -19,7 +19,11 @@ externals:
     name: 蘭蔻 小黑瓶PRO 買115ml送100ml
     brand: Lancôme 蘭蔻
     url: https://www.lancome.com.tw/保養/臉部保養/保養特惠組/A04639-LAC.html
-answer: 五個品牌都以一瓶主力精華為核心，差別在主打成分和組合方式：KORENA 與克蘭詩是「主力精華＋周邊品項」，品木宣言是 A 醇加大容量單瓶，雅詩蘭黛與蘭蔻是同一款精華大份量囤貨。功效欄位是各品牌官方說法，使用體驗待月奈實測後補上。價格為 2026-10-01 官方通路售價。
+  - id: meditherapy
+    name: MEDITHERAPY 抗老修護A醛精華 150ml
+    brand: MEDITHERAPY
+    url: https://www.meditherapy.tw/products/retinal
+answer: 六個品牌都以一瓶主力精華為核心，差別在主打成分和組合方式：KORENA 與克蘭詩是「主力精華＋周邊品項」，品木宣言是 A 醇加大容量單瓶，雅詩蘭黛與蘭蔻是同一款精華大份量囤貨。MEDITHERAPY 是 Amazon 評論數上萬的韓系 A 醛精華，價格只有其他組的零頭，評論多數回報有改善，但也有人爆痘、刺激。功效欄位是各品牌官方說法，使用體驗待月奈實測後補上。價格為 2026-10-01 官方通路售價。
 rows:
   - label: 價格（2026-10-01）
     values:
@@ -28,6 +32,7 @@ rows:
       - 'NT$5,480（momo 限時價）'
       - 'NT$7,200（限時優惠價）'
       - 'NT$8,750'
+      - 'NT$660（官網特價）'
   - label: 主力精華
     values:
       - 魚子金萃精華 50ml
@@ -35,6 +40,7 @@ rows:
       - 駐顏有樹撫紋煥膚A醇精華 95ml
       - 特潤超導全方位修護露（小棕瓶）50ml ×3
       - 超極限肌因賦活露（小黑瓶PRO）115ml＋小瓶共 100ml
+      - 抗老修護A醛精華 150ml
   - label: 主打成分（品牌宣稱）
     values:
       - 雙魚子 X 黑白松露
@@ -42,6 +48,7 @@ rows:
       - 新 A 醇
       - 「年輕關鍵」信號分子
       - 90 兆 β-葡聚醣＋8 大益生菌與益生質
+      - 視黃醛（A 醛）＋菸鹼醯胺＋腺苷
   - label: 主打功效（品牌宣稱）
     values:
       - 撫平細紋、重塑澎潤彈力
@@ -49,6 +56,7 @@ rows:
       - 兩週撫平細紋；保濕好吸收、水潤不油光
       - 激亮超潤、72 小時長效保濕
       - 細紋淡化、毛孔緊緻（官網標示受試者 1 週測試）
+      - 細紋、毛孔、緊緻、膚色不均；臉和身體都能用
   - label: 組合內容
     values:
       - 精華＋煥顏露＋手鏡＋面膜體驗組 ×2
@@ -56,6 +64,7 @@ rows:
       - 單瓶精華（另送甦醒霜 15ml、護手霜 75ml）
       - 同款精華 ×3
       - 同款精華 115ml＋7ml ×10＋5ml ×6
+      - 單瓶精華
   - label: 主力精華每 ml 價格
     values:
       - 含其他正裝，無法單算
@@ -63,8 +72,18 @@ rows:
       - 約 NT$58
       - 約 NT$48
       - 約 NT$41
+      - 約 NT$4.4
+  - label: Amazon 評論（站外資料，非本站實測）
+    values:
+      - 無資料
+      - 無資料
+      - 無資料
+      - 無資料
+      - 無資料
+      - 4.3 星、13,060 則（2026-10-01）；抽樣 50 則中 88–90% 回報變平滑、提亮、毛孔改善，14% 有不良反應（爆痘 6%、刺激 8%）
   - label: 使用體驗（質地、吸收、刺激感）
     values:
+      - 待實測
       - 待實測
       - 待實測
       - 待實測
@@ -77,6 +96,7 @@ rows:
       - 想走 A 醇路線的人
       - 已在用小棕瓶、確定回購
       - 已在用小黑瓶、要大份量或旅行小瓶
+      - 想用低價先試 A 醛、不是敏感肌
 pickIf:
   - if: 你想用最少的錢先試一個品牌的主力精華
     product: korena-caviar-5-piece-set
@@ -88,11 +108,13 @@ pickIf:
     external: estee
   - if: 你要同一款精華的最大份量，常出差需要小瓶
     external: lancome
+  - if: 你想先用千元以內試 A 醛，皮膚不算敏感
+    external: meditherapy
 faq:
   - q: 哪一個每 ml 最便宜？
-    a: 只算單一精華的三組裡，蘭蔻約 NT$41／ml 最低，雅詩蘭黛約 NT$48，品木宣言約 NT$58。KORENA 與克蘭詩的組合含其他品項，無法單算精華的每 ml 價格。
+    a: 只算單一精華的四款裡，MEDITHERAPY 約 NT$4.4／ml 最低（NT$660 ÷ 150ml），其次是蘭蔻約 NT$41、雅詩蘭黛約 NT$48、品木宣言約 NT$58。KORENA 與克蘭詩的組合含其他品項，無法單算精華的每 ml 價格。
   - q: 功效哪一個最好？
-    a: 表上的功效都是各品牌官方說法，本站還沒實測。月奈實際使用後，會在「使用體驗」那一列補上質地、吸收與刺激感的比較。
+    a: 表上的功效都是各品牌官方說法，本站還沒實測。唯一有大量使用者評論可參考的是 MEDITHERAPY（Amazon 評論，見表上那一列），其他品牌在我們的評論資料裡沒有對應產品。月奈實際使用後，會在「使用體驗」那一列補上質地、吸收與刺激感的比較。
 sources:
   - title: 【1010秋日奢養】入門首選❗️魚子初見5入組
     url: https://www.korena.tw/products/korena-1010autumn-5sale
@@ -113,6 +135,18 @@ sources:
   - title: 【官網週年慶獨家】小黑瓶PRO買115ML送100ML
     url: https://www.lancome.com.tw/保養/臉部保養/保養特惠組/A04639-LAC.html
     publisher: 蘭蔻台灣官網
+    accessedAt: 2026-10-01
+  - title: '[MEDITHERAPY] 抗老修護A醛精華'
+    url: https://www.meditherapy.tw/products/retinal
+    publisher: MEDITHERAPY 台灣官網
+    accessedAt: 2026-10-01
+  - title: MEDITHERAPY Retinal Skin Booster Face&Body Serum 5.07 fl.oz
+    url: https://www.amazon.com/dp/B0DG4WXBCF
+    publisher: Amazon.com
+    accessedAt: 2026-10-01
+  - title: 抗老精華比較報告：MEDITHERAPY vs celimax vs 專業競品
+    url: https://ecommerce.weiqi.kids/Narrator/comparisons/anti-aging-serum--comparison--2026-02-11
+    publisher: 電商評論分析（Amazon 評論 50 則抽樣）
     accessedAt: 2026-10-01
 updatedAt: 2026-10-01
 ---
