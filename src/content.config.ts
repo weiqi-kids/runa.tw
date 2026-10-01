@@ -56,6 +56,19 @@ export const PICKS = {
 } as const;
 const pick = z.enum(Object.keys(PICKS) as [keyof typeof PICKS, ...(keyof typeof PICKS)[]]);
 
+// 缺點的性質（選填）。借自 agent.ecommerce-product-review 的負評三分類：
+// 讀者最在意的是「沒效」和「出事」，跟「出貨慢」不能混在一起看。
+// 來源沒講清楚是哪一種就不要填，寫成純字串即可。
+export const CON_KINDS = {
+  'no-effect': '沒解決問題',     // 用了沒感覺、效果不如宣稱
+  'side-effect': '帶來新問題',   // 過敏、泛紅、爆痘、變乾
+  purchase: '購買與服務',        // 出貨、包裝、客服、效期——跟產品本身無關
+} as const;
+const conKind = z.enum(Object.keys(CON_KINDS) as [keyof typeof CON_KINDS, ...(keyof typeof CON_KINDS)[]]);
+// 寫法：`- 純文字` 或 `- { text: 純文字, kind: side-effect }`。建置後一律是 { text, kind? }。
+const con = z.union([z.string(), z.object({ text: z.string(), kind: conKind.optional() })])
+  .transform((c) => (typeof c === 'string' ? { text: c } : c));
+
 const brands = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/brands' }),
   schema: z.object({
@@ -63,7 +76,7 @@ const brands = defineCollection({
     country: z.string().optional(),
     website: z.string().url().optional(),
     summary: z.string(),
-    // 聯盟行銷。有設定的品牌，產品頁的購買按鈕會自動換成推廣連結並標示「聯盟連結」。
+    // 聯盟行銷。有設定的品牌，產品頁的購買按鈕會自動換成推廣連結（rel="sponsored"，頁面不另外標示）。
     affiliate: z.object({
       network: z.literal('ichannels'),
       merchantId: z.number().int(),
@@ -127,7 +140,7 @@ const products = defineCollection({
     notFitFor: z.array(z.string()).min(1),
     highlights: z.array(z.string()).default([]),
     pros: z.array(z.string()).min(1),
-    cons: z.array(z.string()).min(1),
+    cons: z.array(con).min(1),
     specs: z.array(z.object({ label: z.string(), value: z.string(), source: z.string().url().optional() })).default([]),
     competitors: z.array(reference('products')).default([]),
 

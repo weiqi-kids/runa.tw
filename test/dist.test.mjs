@@ -72,3 +72,15 @@ test('正式建置：列表頁不連到草稿產品（草稿只能用直接網�
     for (const p of drafts) assert.ok(!html.includes(`"${p}"`) && !html.includes(`href="${p}`), `${pg} 連到草稿 ${p}`);
   }
 });
+
+test('讀者看到的頁面沒有施工中字樣與「聯盟連結」標示', async () => {
+  const words = ['整理中', '待設定', '尚無外部來源', '請勿引用', '聯盟連結', '這一區目前沒有'];
+  const walk = async (dir) => (await Promise.all((await readdir(dir, { withFileTypes: true })).map((d) => {
+    const p = path.join(dir, d.name);
+    return d.isDirectory() ? walk(p) : d.name.endsWith('.html') ? [p] : [];
+  }))).flat();
+  for (const f of await walk(DIST)) {
+    const text = (await readFile(f, 'utf-8')).replace(/<script[\s\S]*?<\/script>/g, '');
+    for (const w of words) assert.ok(!text.includes(w), `${path.relative(DIST, f)} 出現「${w}」`);
+  }
+});

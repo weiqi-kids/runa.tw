@@ -3,6 +3,7 @@
 // 透過 astro.config.mjs 的 injectRoute 掛路由（entrypoint 指到這裡），不進 src/pages。
 import type { APIRoute } from 'astro';
 import { published, path, ymd, twd, SITE_NAME, TAGLINE } from './site';
+import { CON_KINDS } from '../content.config';
 
 type Src = { title: string; url: string; publisher?: string; accessedAt: Date };
 type Faq = { q: string; a: string };
@@ -29,7 +30,7 @@ export const GET: APIRoute = async ({ site }) => {
       `適合誰：${d.fitFor.join('；')}`,
       `不適合誰：${d.notFitFor.join('；')}`,
       `優點：${d.pros.join('；')}`,
-      `缺點：${d.cons.join('；')}`,
+      `缺點：${d.cons.map((c) => (c.kind ? `［${CON_KINDS[c.kind]}］` : '') + c.text).join('；')}`,
       ...(d.price ? [`價格：${twd(d.price.amount)}（${ymd(d.price.asOf)} 查閱，${d.price.source}）`] : []),
       ...faqBlock(d.faq),
       '', p.body?.trim() ?? '',

@@ -7,7 +7,8 @@ import { PICKS } from '../../content.config';
 const products = (await listed('products')).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt);
 const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
 const sections = (Object.keys(PICKS) as (keyof typeof PICKS)[])
-  .map((k) => ({ key: k, label: PICKS[k], items: products.filter((p) => p.data.picks.includes(k)) }));
+  .map((k) => ({ key: k, label: PICKS[k], items: products.filter((p) => p.data.picks.includes(k)) }))
+  .filter((s) => s.items.length > 0);   // 空分區不顯示
 ---
 <Base title="AI產品嚴選" description="月奈創角的嚴選清單：最新嚴選、本月嚴選、編輯嚴選、黑科技、冷門好物、值得關注。每一項都有適合誰、不適合誰與缺點。"
   crumbs={[{ name: 'AI產品嚴選', path: '/picks/' }]}>
@@ -23,9 +24,7 @@ const sections = (Object.keys(PICKS) as (keyof typeof PICKS)[])
     {sections.map((s) => (
       <section class="block" id={s.key}>
         <h2>{s.label}</h2>
-        {s.items.length
-          ? <div class="grid cards">{s.items.map((p) => <ProductCard product={p} brand={brands.get(p.data.brand.id)} />)}</div>
-          : <p class="muted">這一區目前沒有產品。</p>}
+        <div class="grid cards">{s.items.map((p) => <ProductCard product={p} brand={brands.get(p.data.brand.id)} />)}</div>
       </section>
     ))}
   </div>

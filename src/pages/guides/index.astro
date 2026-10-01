@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { all, path, ymd } from '../../lib/site';
-const guides = (await all('guides')).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt);
+import { listed, path, ymd } from '../../lib/site';
+const guides = (await listed('guides')).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt);
 const kinds = ['選品指南', '購買指南', '使用者痛點', '產品趨勢', '產業觀察'] as const;
 ---
 <Base title="深度選品" description="選品指南、購買指南、使用者痛點、產品趨勢與產業觀察。" crumbs={[{ name: '深度選品', path: '/guides/' }]}>
@@ -9,14 +9,12 @@ const kinds = ['選品指南', '購買指南', '使用者痛點', '產品趨勢'
     <header class="page-hd"><p class="kicker">深度選品</p><h1>把選擇的方法講清楚</h1></header>
     {kinds.map((k) => {
       const items = guides.filter((g) => g.data.kind === k);
-      return (
+      return items.length > 0 && (
         <section class="block">
           <h2>{k}</h2>
-          {items.length
-            ? <ul class="guide-list">{items.map((g) => (
-                <li><a href={path.guide(g.id)}><strong>{g.data.title}</strong></a>
-                  <p>{g.data.answer}</p><p class="muted small">更新 {ymd(g.data.updatedAt)}</p></li>))}</ul>
-            : <p class="muted">整理中</p>}
+          <ul class="guide-list">{items.map((g) => (
+            <li><a href={path.guide(g.id)}><strong>{g.data.title}</strong></a>
+              <p>{g.data.answer}</p><p class="muted small">更新 {ymd(g.data.updatedAt)}</p></li>))}</ul>
         </section>
       );
     })}

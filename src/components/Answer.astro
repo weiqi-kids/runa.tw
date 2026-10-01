@@ -10,6 +10,6 @@ const { text, updatedAt, sources = 0, label = '重點結論' } = Astro.props;
   <p class="answer-text">{text}</p>
   <p class="answer-meta">
     資料更新 <time datetime={ymd(updatedAt)}>{ymd(updatedAt)}</time>
-    {sources > 0 ? <>・{sources} 筆資料來源（見頁尾）</> : <>・尚無外部來源</>}
+    {sources > 0 && <>・{sources} 筆資料來源（見頁尾）</>}
   </p>
 </section>

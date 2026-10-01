@@ -1,14 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { all, path } from '../../lib/site';
-const needs = await all('needs');
-const groups = (['情境', '族群', '送禮'] as const).map((g) => ({ name: g, items: needs.filter((n) => n.data.group === g) }));
-// 還沒有頁面的需求只列名稱，讓人知道網站會涵蓋什麼，但不產生空頁
-const planned: Record<string, string[]> = {
-  情境: ['想提高工作效率', '想改善生活', '在家工作', '旅行'],
-  族群: ['小家庭', '上班族', '親子'],
-  送禮: ['想送禮'],
-};
+import { listed, path } from '../../lib/site';
+const needs = await listed('needs');
+// 沒有需求頁的組別不顯示
+const groups = (['情境', '族群', '送禮'] as const).map((g) => ({ name: g, items: needs.filter((n) => n.data.group === g) }))
+  .filter((g) => g.items.length > 0);
 ---
 <Base title="找需求" description="從你的需求出發找產品：先說問題，再給解法與嚴選產品。" crumbs={[{ name: '找需求', path: '/needs/' }]}>
   <div class="shell">
@@ -20,7 +16,6 @@ const planned: Record<string, string[]> = {
           <h2>{g.name}</h2>
           <ul class="links">
             {g.items.map((n) => <li><a href={path.need(n.id)}>{n.data.name}</a></li>)}
-            {planned[g.name].filter((p) => !g.items.some((n) => n.data.name === p)).map((p) => <li class="muted">{p}（整理中）</li>)}
           </ul>
         </section>
       ))}

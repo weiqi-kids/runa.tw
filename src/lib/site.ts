@@ -23,8 +23,8 @@ export const NAV = [
   { href: '/about/', label: '關於' },
 ];
 
-// 找產品的大分類。沒有品類的組別照樣列出，顯示「整理中」——讓人知道網站打算涵蓋什麼，
-// 但不為空組別產生頁面（空頁就是薄頁）。
+// 找產品的大分類與排列順序。沒有品類的組別不顯示（「整理中」看起來像沒做完的網站），
+// 也不產生頁面（空頁就是薄頁）。
 export const CATEGORY_GROUPS = ['3C科技', 'AI工具', '居家生活', '親子育兒', '美妝保養', '健康生活', '戶外旅行'];
 
 export const isDraft = (e: { data: { status?: string } }) => e.data.status !== 'published';

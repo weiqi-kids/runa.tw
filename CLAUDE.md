@@ -31,7 +31,7 @@ pnpm verify     # build → 站內連結檢查 → 測試（字級、hex、草�
 
 1. **可空不可推論。** 官網沒寫的欄位就不填，不補「合理的預設值」。功效描述一律放「品牌宣稱（本站未驗證）」。
 2. **價格一定帶 `asOf` 與 `source`。** 不採信原價與「現省」，比較一律用售價重算，算式寫在頁面上。
-3. **每個產品至少一項 `cons`、一項 `notFitFor`。** schema 擋著。
+3. **每個產品至少一項 `cons`、一項 `notFitFor`。** schema 擋著`cons` 可寫成 `{ text, kind }` 標性質（`no-effect`／`side-effect`／`purchase`），來源沒講清楚就寫純字串。
 4. **`status` 預設 draft。** draft → noindex、無 JSON-LD、不進 sitemap／llms.txt、頁首掛「草稿・未實測」。實測完才改 `published`，published 必須有 `sources`。
    正式站的列表頁（首頁、嚴選、品類、需求、比較列表、搜尋）只列 published（`listed()`），草稿只能用直接網址打開給站主審閱。測試擋著。
 5. **網址發出就不變。** 檔名＝slug。改名要做 301。
@@ -41,11 +41,12 @@ pnpm verify     # build → 站內連結檢查 → 測試（字級、hex、草�
 ## 選品
 
 流程照 `docs/選品SOP.md`：`pnpm picks` 出候選（品牌條件 × 站上定位 × GSC／GA 需求），人工篩選後才建頁。
+競品與指南的參考資料可用 Amazon 評論分析報告（ecommerce.weiqi.kids），用法、引用限制、指南骨架都在 SOP。
 品牌清單匯出在 `data/private/`（會員限定資料，不進版控）。
 
 ## 聯盟行銷
 
-購買按鈕由 `src/lib/affiliate.ts` 依品牌的 `affiliate` 設定自動轉成 iChannels 推廣連結（Deep Link，不需金鑰），頁面標「聯盟連結」、`rel="sponsored"`。
+購買按鈕由 `src/lib/affiliate.ts` 依品牌的 `affiliate` 設定自動轉成 iChannels 推廣連結（Deep Link，不需金鑰），連結帶 `rel="sponsored"`，頁面上不另外標示「聯盟連結」（月奈 2026-10-01 決定：不像電商推薦網站）。
 產品的 `buy.url` 一律填品牌官網原始網址。細節與 API 文件摘要在 `docs/ichannels-api.md`。
 購買按鈕點擊送 GA 事件 `buy_click`（自訂維度 `product_id`、`brand_id`、`placement`、`affiliate`），用 `pnpm seo clicks` 看。
 
@@ -53,6 +54,7 @@ pnpm verify     # build → 站內連結檢查 → 測試（字級、hex、草�
 
 2026-09-29 月奈選定 **A 雜誌風**：暖奶油底、莓果粉主色、奶油黃貼紙、手寫感標題（霞鶩文楷）、拍立得與貼紙拼貼。之後的頁面都沿用 `site.css` 的 `a-*` 元件，不另起風格。
 用語一律台灣用法，不用「種草」這類中國用語。
+看起來要像選品網站，不像施工中的網站：沒內容的區塊、分類、選單項目直接不顯示，不寫「整理中」「帳號待設定」「尚無外部來源」；購買連結旁也不標「聯盟連結」（月奈 2026-10-01 決定）。測試擋著。
 
 ## 其他自動化
 

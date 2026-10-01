@@ -8,7 +8,7 @@ import Share from '../../components/Share.astro';
 import { showcase, COUPON } from '../../lib/showcase';
 import { outbound } from '../../lib/affiliate';
 import { all, listed, path, twd, ymd, isDraft, MEDIA_LABEL } from '../../lib/site';
-import { PICKS } from '../../content.config';
+import { PICKS, CON_KINDS } from '../../content.config';
 
 export async function getStaticPaths() {
   return (await all('products')).map((p) => ({ params: { slug: p.id }, props: { product: p } }));
@@ -56,7 +56,7 @@ const jsonLd: object[] = [
       datePublished: ymd(d.publishedAt),
       reviewBody: d.verdict,
       positiveNotes: list(d.pros),
-      negativeNotes: list(d.cons),
+      negativeNotes: list(d.cons.map((c) => c.text)),
     },
   },
   {
@@ -136,7 +136,6 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
       )}
       <div class="a-cta-row">
         {buy && go && <a class="a-btn a-btn-main" href={go.href} target="_blank" rel={go.rel} data-out={product.id} data-brand={brand.id} data-place="hero">{buy.label} ↗</a>}
-        {go?.affiliate && <span class="tag" title="透過這個連結購買，月奈可能獲得分潤，不影響選品結論">聯盟連結</span>}
         <a class="a-btn a-btn-ghost" href="#compare">跟其他組比比看</a>
       </div>
       <div style="margin-top:1.5rem"><Share url={`${site}${path.product(product.id)}`} text={`月奈推薦：${d.name}——${d.verdict}`} /></div>
@@ -164,7 +163,10 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
       </div>
       <div>
         <h3>先想一下，如果你是…</h3>
-        <ul>{[...d.notFitFor, ...d.cons].map((x) => <li>{x}</li>)}</ul>
+        <ul>
+          {d.notFitFor.map((x) => <li>{x}</li>)}
+          {d.cons.map((c) => <li>{c.kind && <><span class="a-chip">{CON_KINDS[c.kind]}</span> </>}{c.text}</li>)}
+        </ul>
       </div>
     </div>
   </section>

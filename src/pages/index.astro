@@ -2,15 +2,17 @@
 import { getEntries } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Share from '../components/Share.astro';
-import { all, listed, path, twd, ymd, SITE_NAME, TAGLINE } from '../lib/site';
+import { listed, path, twd, ymd, SITE_NAME, TAGLINE } from '../lib/site';
 import { showcase, SOCIAL, COUPON } from '../lib/showcase';
 import { PICKS } from '../content.config';
 
 const { brands, products, pickIf } = await showcase();
-const needs = await all('needs');
-const categories = await all('categories');
+// 還沒開的社群帳號不顯示
+const social = SOCIAL.filter((s) => s.url);
+const needs = await listed('needs');
+const categories = await listed('categories');
 const cmps = await Promise.all((await listed('comparisons')).slice(0, 4).map(async (c) => ({ c, ps: await getEntries(c.data.products) })));
-const guides = (await all('guides')).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt).slice(0, 3);
+const guides = (await listed('guides')).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt).slice(0, 3);
 const suggestions = [...needs.map((n) => n.data.name), ...categories.map((c) => c.data.name)].slice(0, 4);
 const site = Astro.site!.toString().replace(/\/$/, '');
 const firstPick = (p: (typeof products)[number]) => p.data.picks[0];
@@ -128,13 +130,13 @@ const firstPick = (p: (typeof products)[number]) => p.data.picks[0];
 
   <section class="a-sec a-follow" id="follow">
     <div class="a-shell">
-      <h2>追蹤月奈，新選品第一個知道</h2>
-      <p class="a-hero-lead" style="margin-inline:auto">每一支影片、每一則限動，都連回完整的選品頁。</p>
-      <div class="a-social">
-        {SOCIAL.map((s) => s.url
-          ? <a class="a-btn a-btn-ghost" href={s.url} target="_blank" rel="noopener">{s.label}</a>
-          : <span class="a-btn a-btn-ghost" aria-disabled="true">{s.label}<span>（帳號待設定）</span></span>)}
-      </div>
+      {social.length > 0 ? <>
+        <h2>追蹤月奈，新選品第一個知道</h2>
+        <p class="a-hero-lead" style="margin-inline:auto">每一支影片、每一則限動，都連回完整的選品頁。</p>
+        <div class="a-social">
+          {social.map((s) => <a class="a-btn a-btn-ghost" href={s.url!} target="_blank" rel="noopener">{s.label}</a>)}
+        </div>
+      </> : <h2>覺得有用？分享給朋友</h2>}
       <div style="display:flex;justify-content:center">
         <Share url={`${site}/`} text="月奈這週挑的東西，你看看👀" />
       </div>
