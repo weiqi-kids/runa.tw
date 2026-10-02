@@ -68,6 +68,14 @@ const jsonLd: object[] = [
     datePublished: ymd(d.publishedAt),
     dateModified: ymd(d.updatedAt),
     about: { '@id': `${url}#product` },
+    ...(d.sources.length ? {
+      citation: d.sources.map((s) => ({
+        '@type': 'CreativeWork',
+        name: s.title,
+        url: s.url,
+        ...(s.publisher ? { publisher: { '@type': 'Organization', name: s.publisher } } : {}),
+      })),
+    } : {}),
   },
   ...d.media.filter((m) => m.uploadDate && m.thumbnail).map((m) => ({
     '@context': 'https://schema.org',
