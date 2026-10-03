@@ -74,4 +74,4 @@ updatedAt: 2026-10-03
 
 ## 月奈怎麼看
 
-月奈正在實驗的 [BFFECT 修修瓶](/products/bffect-tranexamic-acid-2-whitening-serum/)，官網文案寫 2% 傳明酸加 2% α-熊果素，但全成分表寫的是 Arbutin（法規表上 β-熊果素的名稱），兩者對不上，記在它的[實驗筆記](/products/bffect-tranexamic-acid-2-whitening-serum/#lab)。這也是「看成分表寫的是哪一種」這一步的實例。傳明酸的部分見[傳明酸是什麼？](/guides/tranexamic-acid-guide/)。
+熊果素通常不會單獨用，常跟傳明酸、B3 放在同一瓶。月奈正在實驗的 [BFFECT 修修瓶](/products/bffect-tranexamic-acid-2-whitening-serum/)就是傳明酸加熊果素，8 週紀錄在[研究筆記](/lab/)。傳明酸的部分見[傳明酸是什麼？](/guides/tranexamic-acid-guide/)。
