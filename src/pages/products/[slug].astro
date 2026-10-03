@@ -193,6 +193,7 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
                 <p class="a-log-meta"><time datetime={ymd(e.date)}>{ymd(e.date)}</time> <span class="a-chip">{dayOf(e.date) ? `第 ${dayOf(e.date)} 天` : LOG_KINDS[e.kind]}</span></p>
                 <h3>{e.title}</h3>
                 <p>{e.note}</p>
+                {e.refs.length > 0 && <p class="a-log-refs">資料：{e.refs.map((r, i) => <>{i > 0 && '・'}<a href={r.url} target="_blank" rel="nofollow noopener">{r.title}</a></>)}</p>}
               </li>
             ))}
           </ol>

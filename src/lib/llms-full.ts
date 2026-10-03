@@ -35,7 +35,7 @@ export const GET: APIRoute = async ({ site }) => {
       ...opt('不適合誰', d.notFitFor),
       ...opt('優點', d.pros),
       ...opt('缺點', d.cons.map((c) => (c.kind ? `［${CON_KINDS[c.kind]}］` : '') + c.text)),
-      ...(d.log.length ? ['', '實驗筆記：', ...[...d.log].sort((a, b) => +a.date - +b.date).map((e) => `- ${ymd(e.date)}［${LOG_KINDS[e.kind]}］${e.title}：${e.note}`)] : []),
+      ...(d.log.length ? ['', '實驗筆記：', ...[...d.log].sort((a, b) => +a.date - +b.date).map((e) => `- ${ymd(e.date)}［${LOG_KINDS[e.kind]}］${e.title}：${e.note}${e.refs.length ? `（資料：${e.refs.map((r) => r.url).join('、')}）` : ''}`)] : []),
       ...(d.price ? [`價格：${twd(d.price.amount)}（${ymd(d.price.asOf)} 查閱，${d.price.source}）`] : []),
       ...faqBlock(d.faq),
       '', p.body?.trim() ?? '',

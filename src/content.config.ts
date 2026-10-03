@@ -57,6 +57,8 @@ const logEntry = z.object({
   title: z.string(),
   note: z.string(),
   kind: z.enum(Object.keys(LOG_KINDS) as [keyof typeof LOG_KINDS, ...(keyof typeof LOG_KINDS)[]]).default('observe'),
+  // 這則筆記引用的資料（網路心得、文獻、官方公告）。同一份資料也要列進產品的 sources。
+  refs: z.array(z.object({ title: z.string(), url: z.string().url() })).default([]),
 });
 
 // 嚴選標籤：首頁與 /picks/ 的分區。刻意做成標籤而不是獨立網址——

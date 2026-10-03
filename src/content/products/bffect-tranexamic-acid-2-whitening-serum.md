@@ -7,14 +7,14 @@ category: brightening-serums
 picks: [latest, watch]
 image: /images/bffect/tranexamic-serum.jpg
 gallery: [/images/bffect/tranexamic-serum-2.jpg]
-verdict: 還沒開始用。先把成分表和官網說法讀完，列出這 28 天要看的四件事。
+verdict: 還沒開始用。官網、網路心得、研究文獻都讀過一輪：傳明酸擦的有研究支持，但多半要 4–8 週才看得到，所以觀察延長到第 8 週。
 whySelected: BFFECT「皮膚專科醫師親研」系列裡唯一主打美白的一瓶。官網寫了兩個美白成分的濃度（2% 傳明酸、2% α-熊果素），也寫了 28 天測試怎麼做，條件寫得清楚，才有東西可以驗。
 experiment:
-  question: 早晚用滿 28 天，斑點和暗沉會不會像官網說的變淡？
+  question: 早晚用 28 天，斑點和暗沉會不會像官網說的變淡？到第 8 週又差多少？
   watch:
     - 質地與吸收：官網寫無水配方，擦起來會不會黏、好不好推
     - 刺激感：成分有杏仁酸，前兩週會不會泛紅或刺痛
-    - 第 0、14、28 天在同一個光線下拍照，比顴骨的斑和整體膚色
+    - 第 0、14、28、56 天在同一個光線下拍照，比顴骨的斑和整體膚色
     - 原本的保養品要停掉哪些：官網說不要跟 A 醇、A 酸、酸類、B3 一起用
 log:
   - date: 2026-10-03
@@ -23,12 +23,51 @@ log:
     note: 官網標了濃度的是 2% 傳明酸、2% α-熊果素。另外有維他命 B3、杏仁酸、Keratoline™ C PS 酵素，但沒寫濃度。全成分表裡杏仁酸（Mandelic Acid）排第 4、維他命 B3（Niacinamide）排第 5，排在傳明酸、熊果素前面。
   - date: 2026-10-03
     kind: prep
-    title: 一個要先問清楚的地方
-    note: 官網注意事項寫「請勿與高濃度維他命C、維生素A類、酸類、維他命B3成分產品一起使用」，可是它自己就含杏仁酸和 B3。是指「不要再疊別瓶」嗎？開始用之前先問客服，問到的答案會補在這裡。
+    title: 不能跟 B3、酸類一起用，可是它自己就有？
+    note: 官網注意事項寫「請勿與高濃度維他命C、維生素A類、酸類、維他命B3成分產品一起使用」，可是修修瓶自己就含杏仁酸和 B3。理由寫在同品牌 10B 修復瓶（10% B3）的頁面：酸類或維他命 C 產品 pH 值較低，一起用會影響 B3 的結構，「有機會導致刺激性的提高」。所以這條是叫你不要再疊別瓶 B3 或酸類，疊越多越容易刺激，跟 Coupang 評價摘要的「有點刺痛」對得上。奇怪的是，BFFECT 自己的「全效保養組」就把修修瓶和 10B 修復瓶放在同一組，只寫「分階段」，沒說怎麼錯開。這次實驗的做法：8 週內不疊 B3、酸類、A 醇和高濃度維他命 C，只留修修瓶、保濕和防曬，這樣看到的變化才算得到它頭上。
+    refs:
+      - title: BFFECT 10B 修復瓶（注意事項）
+        url: https://www.bffect.com/products/niacinamide-10-matrixyl-2
+      - title: BFFECT 全效保養組
+        url: https://www.bffect.com/products/complete-skincare
   - date: 2026-10-03
     kind: prep
     title: 官網的「28 天」是怎麼測的
     note: 官網寫的是 24 位 18–50 歲男女每天使用 28 天後的自我評估，不是儀器量測，也沒有公開分數。所以這次也用 28 天，照片和感受分開記。
+  - date: 2026-10-03
+    kind: prep
+    title: 網路上找得到的心得很少
+    note: 修修瓶本身的討論不多。@cosme 的修修瓶頁面還沒有任何一篇心得；Dcard 搜「修修瓶」沒有找到使用心得。Coupang 的評價摘要寫「皮膚刺激程度：有點刺痛」、吸收快、保濕和效果「非常滿意」（Coupang 擋了我們的瀏覽器，只看得到搜尋引擎抓到的摘要，看不到有幾則評價）。臉書上有創作者分享用了大約兩個月、斑點變淡，也只看得到摘要。「有點刺痛」值得注意，可能跟成分裡的杏仁酸有關，第一週要特別記刺激感。
+    refs:
+      - title: '@cosme：2%傳明酸淡斑美白精華'
+        url: https://www.cosme.net.tw/products/114861
+      - title: Coupang：BFFECT 修修瓶
+        url: https://www.tw.coupang.com/products/BFFECT-%E4%BF%AE%E4%BF%AE%E7%93%B6-2%25%E5%82%B3%E6%98%8E%E9%85%B8%E6%B7%A1%E6%96%91%E7%BE%8E%E7%99%BD%E7%B2%BE%E8%8F%AF-664434607177789
+  - date: 2026-10-03
+    kind: prep
+    title: 大家怎麼看 BFFECT 這個品牌
+    note: PTT 美妝板 2019 年有一串「有人用過 BFFECT 嗎？」：有人用了 B3 和傳明酸覺得「美白有感」、回購超過 5 瓶；好幾個人覺得「無功無過」；一位用了爆痘，品牌有退款；也有人不喜歡它的廣告手法。這串是 2019 年的，不確定講的傳明酸是不是現在這瓶修修瓶，只能當品牌口碑參考。
+    refs:
+      - title: PTT BeautySalon：有人用過 BFFECT 這個牌子嗎？
+        url: https://www.ptt.cc/bbs/BeautySalon/M.1571567488.A.CF4.html
+  - date: 2026-10-03
+    kind: prep
+    title: 研究文獻：擦的傳明酸有沒有用
+    note: 2024 年一篇統合分析（22 篇隨機對照試驗、1,280 人）結論是傳明酸對肝斑有效，效果口服最大，其次是注射、外用，但研究之間差異很大。2026 年一篇文獻回顧整理外用的研究：濃度 2–5%、一天擦兩次，大約 4–8 週開始看得到變淡，研究多半做 12 週；耐受度好，偶爾輕微刺激或乾燥；停用後可能復發。要注意這些研究的對象是肝斑和發炎後色素沉澱，不是一般的暗沉。看完決定：第 28 天只是第一個檢查點，延長到第 8 週再看一次。
+    refs:
+      - title: Calacattawi 等，J Dermatolog Treat 2024（統合分析）
+        url: https://pubmed.ncbi.nlm.nih.gov/38843906/
+      - title: AlJabr 等，J Cosmet Dermatol 2026（文獻回顧）
+        url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12848551/
+  - date: 2026-10-03
+    kind: prep
+    title: 「2%」這兩個數字對照法規
+    note: 傳明酸：衛福部「化粧品成分使用限制表」的上限是 3%，修修瓶的 2% 在範圍內，不是加到頂。α-熊果素：舊的限制表只列了 β-熊果素（CAS 497-76-7，上限 7%），沒有 α-熊果素；2025-11-06 公告修正的新表才新增 α-熊果素，免沖洗的臉部產品上限 2%、身體 0.5%，2027-10-01 生效，跟歐盟 SCCS 2023 年的安全濃度一樣。所以官網說「添加至法定最高濃度 2%」，對照的是這次新規定，說法成立。
+    refs:
+      - title: 化粧品成分使用限制表修正規定（2025-11-06 公告，2027-10-01 生效）
+        url: https://www.fda.gov.tw/tc/includes/GetFile.ashx?id=f638985424897745272&type=1
+      - title: SCCS：Safety of alpha-arbutin and beta-arbutin in cosmetic products（2023）
+        url: https://health.ec.europa.eu/publications/safety-alpha-arbutin-and-beta-arbutin-cosmetic-products_en
 fitFor:
   - 想讓膚色看起來更均勻、透亮的人（官網建議用途）
   - 孕期或備孕中、想找美白精華的人（官網寫孕期可使用）
@@ -66,7 +105,9 @@ faq:
   - q: 孕婦可以用修修瓶嗎？
     a: 官網的回答是孕婦及備孕期都可以使用；哺乳期官網寫全品項沒有使用限制。還是有疑慮，先問醫師。
   - q: 可以跟 A 醇或酸類精華一起用嗎？
-    a: 官網建議不要。注意事項寫的是避開高濃度維他命 C、維生素 A 類（含 A 醇、A 酸）、酸類、維他命 B3 成分的產品。
+    a: 官網建議不要。注意事項寫的是避開高濃度維他命 C、維生素 A 類（含 A 醇、A 酸）、酸類、維他命 B3 成分的產品。修修瓶本身已含杏仁酸和 B3，同品牌 10B 修復瓶的頁面寫明理由：低 pH 的酸類會影響 B3 結構、提高刺激性，所以是不要再疊加別瓶。
+  - q: 擦傳明酸多久會看到效果？
+    a: 外用傳明酸的研究多半一天擦兩次、做 12 週，大約 4–8 週開始看得到變淡；研究對象是肝斑與發炎後色素沉澱。官網的 28 天是受測者自評。本站的實驗會記到第 8 週。
   - q: 早上可以擦嗎？
     a: 官網寫早晚都能用，白天用了要擦防曬或用衣物遮蔽。
 sources:
@@ -74,11 +115,45 @@ sources:
     url: https://www.bffect.com/products/tranexamic-acid-2-whitening-serum
     publisher: BFFECT 官網
     accessedAt: 2026-10-03
+  - title: 'Tranexamic acid as a therapeutic option for melasma management: meta-analysis and systematic review of randomized controlled trials'
+    url: https://pubmed.ncbi.nlm.nih.gov/38843906/
+    publisher: The Journal of Dermatological Treatment（2024）
+    accessedAt: 2026-10-03
+  - title: 'Tranexamic Acid for Hyperpigmentation Disorders: A Literature Review on Efficacy and Safety in Melasma and PIH'
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12848551/
+    publisher: Journal of Cosmetic Dermatology（2026）
+    accessedAt: 2026-10-03
+  - title: 化粧品成分使用限制表修正規定（衛授食字第 1141616549 號，2027-10-01 生效）
+    url: https://www.fda.gov.tw/tc/includes/GetFile.ashx?id=f638985424897745272&type=1
+    publisher: 衛生福利部食品藥物管理署
+    accessedAt: 2026-10-03
+  - title: 【10B修復瓶】10% 維他命B3 + 2% 淡紋四胜肽 30ml
+    url: https://www.bffect.com/products/niacinamide-10-matrixyl-2
+    publisher: BFFECT 官網
+    accessedAt: 2026-10-03
+  - title: 【全效保養組】一組完成日常保養
+    url: https://www.bffect.com/products/complete-skincare
+    publisher: BFFECT 官網
+    accessedAt: 2026-10-03
+  - title: Safety of alpha-arbutin and beta-arbutin in cosmetic products
+    url: https://health.ec.europa.eu/publications/safety-alpha-arbutin-and-beta-arbutin-cosmetic-products_en
+    publisher: 歐盟消費者安全科學委員會（SCCS）
+    accessedAt: 2026-10-03
+  - title: 有人用過 BFFECT 這個牌子嗎？
+    url: https://www.ptt.cc/bbs/BeautySalon/M.1571567488.A.CF4.html
+    publisher: PTT BeautySalon 板（2019）
+    accessedAt: 2026-10-03
+  - title: 2%傳明酸淡斑美白精華
+    url: https://www.cosme.net.tw/products/114861
+    publisher: '@cosme 台灣'
+    accessedAt: 2026-10-03
 publishedAt: 2026-10-03
 updatedAt: 2026-10-03
 changelog:
   - date: 2026-10-03
     note: 開始研究。成分、價格、注意事項取自官網。
+  - date: 2026-10-03
+    note: 補上網路心得、品牌口碑、研究文獻與法規對照；觀察延長到第 8 週。查清楚併用限制的理由與 α-熊果素 2% 的法規依據。
 ---
 
 ## 品牌宣稱（本站未驗證）
@@ -92,4 +167,4 @@ changelog:
 
 ## 月奈的筆記
 
-這頁會跟著實驗一直更新。上面的「實驗筆記」是按日期記的原始紀錄，用滿 28 天才會寫結論、適合誰和優缺點。
+這頁會跟著實驗一直更新。上面的「實驗筆記」是按日期記的原始紀錄，用到第 8 週才會寫結論、適合誰和優缺點。

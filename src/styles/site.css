@@ -163,6 +163,7 @@ h1, h2, h3 { font-family: var(--a-hand); font-weight: 700; line-height: 1.25; ma
 .a-log-meta { margin: 0 0 0.4rem; font-size: var(--text-xs); color: var(--a-soft); display: flex; gap: 0.6rem; align-items: center; }
 .a-log h3 { font-size: var(--text-lg); margin: 0 0 0.3rem; }
 .a-log p { margin: 0; font-size: var(--text-sm); }
+.a-log .a-log-refs { margin-top: 0.5rem; font-size: var(--text-xs); color: var(--a-soft); }
 .a-log-latest { margin: 0; font-size: var(--text-xs); color: var(--a-soft); }
 .a-log-latest b { color: var(--a-ink); }
 .a-lab-list { display: grid; gap: 1.4rem; }

@@ -109,6 +109,7 @@ pnpm picks --offline    # 沒有 gcloud 權限時，跳過 GSC／GA
 - `src/content/products/<slug>.md`，`status: published`、`stage: testing`。月奈想先看過再公開，就先不填 `status`（預設 draft，只能用直接網址打開）
 - `experiment`：`question`（這次想驗證什麼，一句話）、`watch`（要觀察的事）、`startedAt`（第一天開始用的日期，還沒開始就不填）
 - `log`：實驗筆記，一筆一個日期。Claude 先寫開始前的功課（`kind: prep`）：成分表讀到什麼、官網宣稱怎麼測的、有什麼要先問清楚的。使用中的觀察只能來自月奈，Claude 不代寫
+- 開始前的功課也包含網路資料：購物網站評價、@cosme、Dcard、PTT、部落格心得、成分的研究文獻與食藥署規定。每則筆記的資料放 `refs`（頁面顯示成「資料：」連結），也列進產品的 `sources`。只看得到摘要、打不開原頁的要寫明；合作文、舊版產品的討論要標出來，不能當成獨立心得
 - 實驗中可以先不寫 `pros`；`fitFor`、`notFitFor`、`cons` 只寫官網寫明的用途與限制，頁面會標成「官網說適合」「開始前就知道的限制」
 - 結構化資料不輸出 Review，llms.txt 會標「實驗中，尚未下結論」
 - 品牌不在站上：新增 `src/content/brands/<id>.md`，填 `affiliate`（iChannels 品牌編號、佣金條件、查閱日期），購買按鈕就會自動換成推廣連結
