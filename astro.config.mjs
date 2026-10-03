@@ -34,7 +34,7 @@ for (const [dir, seg] of Object.entries(COLLECTION_PATH)) {
     if (m && !drafts.has(p)) { latest(`/${seg}/`, m[1]); latest('/', m[1]); }
   }
 }
-for (const p of ['/picks/', '/media/']) if (lastmod.has('/')) lastmod.set(p, lastmod.get('/'));
+for (const p of ['/picks/', '/media/', '/lab/']) if (lastmod.has('/')) lastmod.set(p, lastmod.get('/'));
 // 關於頁是手寫的靜態頁：取原始檔最後一次 commit 的日期（查不到就不給，不拿建置時間充數）
 for (const f of readdirSync(new URL('./src/pages/about/', import.meta.url)).filter((n) => n.endsWith('.astro'))) {
   const p = f === 'index.astro' ? '/about/' : `/about/${f.replace(/\.astro$/, '')}/`;

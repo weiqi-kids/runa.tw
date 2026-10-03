@@ -2,7 +2,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 
 export const SITE_NAME = '月奈創角｜AI產品嚴選';
 export const SITE_SHORT = '月奈創角';
-export const TAGLINE = 'AI 幫你找到商品，月奈創角負責把商品研究清楚。';
+export const TAGLINE = 'AI 幫忙把商品找出來，月奈自己試、自己記，用完才下結論。';
 
 // 本機與預覽建置：全站 noindex＋robots 全擋。GitHub Actions 部署到 runa.tw 時設 PUBLIC_SITE_STAGE=production。
 export const IS_PRODUCTION = import.meta.env.PUBLIC_SITE_STAGE === 'production';
@@ -14,6 +14,7 @@ export const GA_ID = process.env.RUNA_GA_ID || '';
 export const GSC_TOKEN = process.env.RUNA_GSC_TOKEN || '';
 
 export const NAV = [
+  { href: '/lab/', label: '研究筆記' },
   { href: '/picks/', label: 'AI產品嚴選' },
   { href: '/categories/', label: '找產品' },
   { href: '/needs/', label: '找需求' },
@@ -26,6 +27,10 @@ export const NAV = [
 // 找產品的大分類與排列順序。沒有品類的組別不顯示（「整理中」看起來像沒做完的網站），
 // 也不產生頁面（空頁就是薄頁）。
 export const CATEGORY_GROUPS = ['3C科技', 'AI工具', '居家生活', '親子育兒', '美妝保養', '健康生活', '戶外旅行'];
+
+export const isTesting = (p: { data: { stage?: string } }) => p.data.stage === 'testing';
+/** 實驗筆記最新的一筆（沒有就 undefined） */
+export const latestLog = <T extends { date: Date }>(log: T[]) => [...log].sort((a, b) => +b.date - +a.date)[0];
 
 export const isDraft = (e: { data: { status?: string } }) => e.data.status !== 'published';
 
@@ -49,6 +54,7 @@ export const path = {
   comparison: (id: string) => `/comparisons/${id}/`,
   guide: (id: string) => `/guides/${id}/`,
   brand: (id: string) => `/brands/${id}/`,
+  lab: '/lab/',
 };
 
 export const ymd = (d: Date) => d.toISOString().slice(0, 10);

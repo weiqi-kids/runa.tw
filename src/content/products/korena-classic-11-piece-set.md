@@ -6,6 +6,7 @@ category: anti-aging-skincare-sets
 needs: [first-try-skincare]
 picks: [editor]
 image: /images/korena/promo.jpg
+gallery: [/images/korena/set-5.png, /images/korena/mood-gold.jpg]
 verdict: 精華、晚霜、煥顏露一次到齊，早晚完整保養流程最划算的入口——官網標示「最多人買」的一組。
 whySelected: 想要完整的早晚保養，這組是三件招牌全到齊的最小組合；另外附面膜禮盒、10ml 旅行瓶精華和化妝包，送禮也拿得出手。
 fitFor:

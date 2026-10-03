@@ -6,6 +6,7 @@ category: anti-aging-skincare-sets
 needs: [first-try-skincare]
 picks: [latest, monthly]
 image: /images/korena/set-5.png
+gallery: [/images/korena/promo.jpg, /images/korena/mood-gold.jpg]
 verdict: 四千出頭，就能把 KORENA 招牌魚子精華和煥顏露一起帶回家——第一次認識這個品牌，最沒負擔的一組。
 whySelected: 想試頂奢保養又怕踩雷？這組只放品牌最具代表性的兩瓶正裝，再送手鏡與面膜體驗組，用最小的份量確認它適不適合你。
 fitFor:

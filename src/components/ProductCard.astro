@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { path, twd, isDraft } from '../lib/site';
+import { path, twd, isDraft, isTesting, latestLog, ymd } from '../lib/site';
 import { PICKS } from '../content.config';
 interface Props { product: CollectionEntry<'products'>; brand?: string }
 const { product, brand } = Astro.props;
@@ -12,11 +12,13 @@ const d = product.data;
     <div class="pcard-body">
       <p class="pcard-tags">
         {d.picks.map((p) => <span class="tag">{PICKS[p]}</span>)}
+        {isTesting(product) && <span class="tag tag-lab">實驗中</span>}
         {isDraft(product) && <span class="tag tag-draft">未實測</span>}
       </p>
       {brand && <p class="pcard-brand">{brand}</p>}
       <h3 class="pcard-name">{d.name}</h3>
       <p class="pcard-verdict">{d.verdict}</p>
+      {isTesting(product) && latestLog(d.log) && <p class="a-log-latest">最新筆記 {ymd(latestLog(d.log)!.date)}：<b>{latestLog(d.log)!.title}</b></p>}
       {d.price && <p class="pcard-price">{twd(d.price.amount)} <span class="muted">（{d.price.asOf.toISOString().slice(0, 10)} 官網）</span></p>}
     </div>
   </a>

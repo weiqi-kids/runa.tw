@@ -5,6 +5,7 @@ brand: korena
 category: anti-aging-skincare-sets
 needs: []
 picks: [watch]
+gallery: [/images/korena/promo.jpg, /images/korena/set-5.png]
 verdict: 三大招牌各兩瓶，再加一瓶 280ml 粉鑽乳從臉寵到身體——每瓶平均下來最划算，適合兩人一起用或已經愛上 KORENA 的回購族。
 whySelected: 已經確定喜歡 KORENA，這組把單瓶價格壓到最低，還多了一瓶身體用的粉鑽乳；和另一半、家人分著用剛剛好。
 fitFor:

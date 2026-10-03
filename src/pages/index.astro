@@ -2,11 +2,15 @@
 import { getEntries } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Share from '../components/Share.astro';
-import { listed, path, twd, ymd, SITE_NAME, TAGLINE } from '../lib/site';
+import { listed, path, twd, ymd, isTesting, latestLog, SITE_NAME, TAGLINE } from '../lib/site';
 import { showcase, SOCIAL, COUPON } from '../lib/showcase';
-import { PICKS } from '../content.config';
+import { PICKS, LOG_KINDS } from '../content.config';
 
-const { brands, products, pickIf } = await showcase();
+const { brands, products: all, pickIf } = await showcase();
+// 實驗中的放「最近在研究」，有結論的才進 TOP 與推薦理由
+const testing = all.filter(isTesting).sort((a, b) => +(latestLog(b.data.log)?.date ?? 0) - +(latestLog(a.data.log)?.date ?? 0));
+const products = all.filter((p) => !isTesting(p));
+const labCover = testing[0]?.data.image;
 // 還沒開的社群帳號不顯示
 const social = SOCIAL.filter((s) => s.url);
 const needs = await listed('needs');
@@ -17,13 +21,13 @@ const suggestions = [...needs.map((n) => n.data.name), ...categories.map((c) => 
 const site = Astro.site!.toString().replace(/\/$/, '');
 const firstPick = (p: (typeof products)[number]) => p.data.picks[0];
 ---
-<Base title={SITE_NAME} description={`${TAGLINE}本週嚴選、我適合哪一組、月奈推薦理由，每個產品都有價格出處與更新紀錄。`}>
+<Base title={SITE_NAME} description={`${TAGLINE}正在研究的產品、已有結論的嚴選、我適合哪一組，每個產品都有實驗筆記、價格出處與更新紀錄。`}>
   <section class="a-hero">
     <div class="a-shell a-hero-grid">
       <div>
-        <span class="a-issue">VOL.01 ・ 2026 秋季號</span>
-        <h1>這週，月奈<br />替你挑了<em>這些</em></h1>
-        <p class="a-hero-lead">AI 幫你把商品找出來，月奈把它研究清楚。只推薦自己看完、算完、比完的東西。</p>
+        <span class="a-issue">月奈的研究筆記 ・ 2026 秋</span>
+        <h1>月奈最近<br />在研究<em>這些</em></h1>
+        <p class="a-hero-lead">AI 幫忙把商品找出來，月奈自己試、自己記：開始前的功課、使用中的觀察、用完的結論，都按日期寫在每一頁。</p>
         <form class="search" role="search" onsubmit="return false">
           <label for="q" class="sr-only">搜尋產品、品牌、需求</label>
           <input id="q" type="search" autocomplete="off" placeholder="你正在找什麼？產品、品牌、需求……" />
@@ -38,22 +42,49 @@ const firstPick = (p: (typeof products)[number]) => p.data.picks[0];
         <figure class="a-polaroid a-p1">
           <span class="a-tape"></span>
           <img src="/images/korena/promo.jpg" alt="" width="679" height="1200" />
-          <figcaption>本週主角 ✦ KORENA</figcaption>
+          <figcaption>有結論了 ✦ KORENA</figcaption>
         </figure>
         <figure class="a-polaroid a-p2">
           <span class="a-tape"></span>
-          <img src="/images/korena/set-5.png" alt="" width="480" height="480" />
-          <figcaption>入門首選 5 入組</figcaption>
+          <img src={labCover ?? '/images/korena/set-5.png'} alt="" width="480" height="480" />
+          <figcaption>{labCover ? `實驗中 ✦ ${brands.get(testing[0].data.brand.id)?.split(' ')[0]}` : '入門首選 5 入組'}</figcaption>
         </figure>
         <div class="a-sticker a-sticker-hero"><span>折扣碼再折<b>{twd(COUPON.off).replace('NT', '')}</b></span></div>
       </div>
     </div>
   </section>
 
+  {testing.length > 0 && (
+    <section class="a-sec" id="lab">
+      <div class="a-shell">
+        <header class="a-sec-hd">
+          <h2>最近在研究 ✎</h2>
+          <p>還沒有結論，先看筆記　<a href="/lab/">看全部研究筆記 →</a></p>
+        </header>
+        <div class="a-lab-list">
+          {testing.slice(0, 3).map((p) => {
+            const last = latestLog(p.data.log);
+            return (
+              <article class="a-lab-item">
+                <a href={path.product(p.id)}><img src={p.data.image ?? '/images/korena/mood-gold.jpg'} alt={p.data.name} width="240" height="240" loading="lazy" /></a>
+                <div>
+                  <p><span class="a-chip a-chip-lab">實驗中</span> <span class="muted">{brands.get(p.data.brand.id)}</span></p>
+                  <h3><a href={path.product(p.id)}>{p.data.name}</a></h3>
+                  {p.data.experiment && <p class="a-question">{p.data.experiment.question}</p>}
+                  {last && <p class="a-log-latest">{ymd(last.date)}・{LOG_KINDS[last.kind]}：<b>{last.title}</b></p>}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+
   <section class="a-sec a-band" id="top">
     <div class="a-shell">
       <header class="a-sec-hd">
-        <h2>本週 TOP 3 ✦</h2>
+        <h2>有結論的 TOP 3 ✦</h2>
         <p>點愛心收藏，下次回來直接看　<a href="/picks/">看全部嚴選 →</a></p>
       </header>
       <div class="a-top">
@@ -96,7 +127,7 @@ const firstPick = (p: (typeof products)[number]) => p.data.picks[0];
 
   <section class="a-sec a-band a-band-butter" id="reasons">
     <div class="a-shell">
-      <header class="a-sec-hd"><h2>月奈推薦理由</h2><p>為什麼選它，一句話說清楚</p></header>
+      <header class="a-sec-hd"><h2>月奈的結論</h2><p>用完之後，一句話說清楚</p></header>
       <div class="a-reasons">
         {products.flatMap((p) => [p.data.verdict, p.data.whySelected].map((t) => (
           <blockquote class="a-bubble">
@@ -131,14 +162,14 @@ const firstPick = (p: (typeof products)[number]) => p.data.picks[0];
   <section class="a-sec a-follow" id="follow">
     <div class="a-shell">
       {social.length > 0 ? <>
-        <h2>追蹤月奈，新選品第一個知道</h2>
+        <h2>追蹤月奈，新的研究筆記第一個知道</h2>
         <p class="a-hero-lead" style="margin-inline:auto">每一支影片、每一則限動，都連回完整的選品頁。</p>
         <div class="a-social">
           {social.map((s) => <a class="a-btn a-btn-ghost" href={s.url!} target="_blank" rel="noopener">{s.label}</a>)}
         </div>
       </> : <h2>覺得有用？分享給朋友</h2>}
       <div style="display:flex;justify-content:center">
-        <Share url={`${site}/`} text="月奈這週挑的東西，你看看👀" />
+        <Share url={`${site}/`} text="月奈最近在研究的東西，你看看👀" />
       </div>
     </div>
   </section>

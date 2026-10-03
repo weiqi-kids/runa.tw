@@ -84,3 +84,19 @@ test('讀者看到的頁面沒有施工中字樣與「聯盟連結」標示', as
     for (const w of words) assert.ok(!text.includes(w), `${path.relative(DIST, f)} 出現「${w}」`);
   }
 });
+
+test('實驗中的產品：頁面標「實驗中」、有實驗筆記、結構化資料不含評論', async () => {
+  const base = path.resolve('src/content/products');
+  const files = (await readdir(base)).filter((n) => n.endsWith('.md'));
+  for (const f of files) {
+    const fm = (await readFile(path.join(base, f), 'utf-8')).split(/^---$/m)[1];
+    if (!/^stage:\s*testing\s*$/m.test(fm)) continue;
+    const p = `products/${f.replace(/\.md$/, '')}/index.html`;
+    const html = await read(p);
+    assert.match(html, /實驗中/, p);
+    assert.match(html, /id="lab"/, `${p} 缺實驗筆記`);
+    for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+      assert.ok(!JSON.parse(m[1]).review, `${p} 實驗中卻輸出 Review`);
+    }
+  }
+});

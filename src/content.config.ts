@@ -11,8 +11,8 @@
 //
 // 規則（違反了建置會失敗，不是靠自律）：
 //   - 欄位可空，但不可推論。來源沒寫的就不填，不要補「合理的預設值」。
-//   - 每個 published 的 Product 至少一筆 sources，且要有 verdict / fitFor / notFitFor / cons。
-//     沒有缺點的產品頁是廣告，不是選品。
+//   - 每個 published 的 Product 至少一筆 sources。有結論（stage: concluded）的要有 fitFor / notFitFor / pros / cons；
+//     沒有缺點的產品頁是廣告，不是選品。實驗中（testing）的改成要有 experiment 與至少一筆 log。
 //   - status: draft 的頁面 noindex、不進 sitemap／llms.txt／搜尋索引，頁首掛「未查證」橫幅。
 import { defineCollection, reference, z } from 'astro:content';
 import { glob } from 'astro/loaders';
@@ -42,6 +42,21 @@ const media = z.object({
   thumbnail: z.string().url().optional(),
   // 這支影片在證明什麼：實測、開箱、長期使用……
   kind: z.enum(['review', 'unboxing', 'test', 'long-term', 'short']).default('review'),
+});
+
+// 研究進度。網站是月奈的研究筆記：產品可以在「實驗中」就公開，邊用邊記，用完才下結論。
+//   testing   實驗中：已公開開箱前的功課與使用紀錄，還沒有結論（不輸出 Review 結構化資料）
+//   concluded 有結論：verdict／fitFor／notFitFor／pros／cons 都要齊
+// 跟 status 是兩回事：status 管收錄（draft 不公開），stage 管研究做到哪。
+export const STAGES = { testing: '實驗中', concluded: '有結論' } as const;
+
+// 實驗筆記的一筆。kind：prep 開始前的功課、observe 使用中的觀察、result 結論。
+export const LOG_KINDS = { prep: '開始前', observe: '使用中', result: '結論' } as const;
+const logEntry = z.object({
+  date,
+  title: z.string(),
+  note: z.string(),
+  kind: z.enum(Object.keys(LOG_KINDS) as [keyof typeof LOG_KINDS, ...(keyof typeof LOG_KINDS)[]]).default('observe'),
 });
 
 // 嚴選標籤：首頁與 /picks/ 的分區。刻意做成標籤而不是獨立網址——
@@ -133,14 +148,26 @@ const products = defineCollection({
     needs: z.array(reference('needs')).default([]),
     picks: z.array(pick).default([]),
     image: z.string().optional(),
+    // 縮圖列的其他圖片（不含 image）。沒有就不顯示縮圖列。
+    gallery: z.array(z.string()).default([]),
 
-    verdict: z.string(),                 // 一句話結論
-    whySelected: z.string(),             // 為什麼入選
-    fitFor: z.array(z.string()).min(1),
-    notFitFor: z.array(z.string()).min(1),
+    stage: z.enum(Object.keys(STAGES) as [keyof typeof STAGES, ...(keyof typeof STAGES)[]]).default('concluded'),
+    // 實驗設定：想驗證什麼、怎麼觀察。startedAt 是第一天開始用的日期，還沒開始用就不填。
+    experiment: z.object({
+      question: z.string(),
+      watch: z.array(z.string()).min(1),
+      startedAt: date.optional(),
+    }).optional(),
+    log: z.array(logEntry).default([]),
+
+    verdict: z.string(),                 // 一句話結論；實驗中是一句話現況
+    whySelected: z.string(),             // 為什麼入選；實驗中是為什麼想研究它
+    // 以下五項在 concluded 至少各一筆（superRefine 擋著）；實驗中可以先空著，用到哪寫到哪
+    fitFor: z.array(z.string()).default([]),
+    notFitFor: z.array(z.string()).default([]),
     highlights: z.array(z.string()).default([]),
-    pros: z.array(z.string()).min(1),
-    cons: z.array(con).min(1),
+    pros: z.array(z.string()).default([]),
+    cons: z.array(con).default([]),
     specs: z.array(z.object({ label: z.string(), value: z.string(), source: z.string().url().optional() })).default([]),
     competitors: z.array(reference('products')).default([]),
 
@@ -166,6 +193,14 @@ const products = defineCollection({
   }).superRefine((p, ctx) => {
     if (p.status === 'published' && p.sources.length === 0) {
       ctx.addIssue({ code: 'custom', path: ['sources'], message: 'published 的產品至少要有一筆資料來源' });
+    }
+    if (p.stage === 'concluded') {
+      for (const k of ['fitFor', 'notFitFor', 'pros', 'cons'] as const) {
+        if (p[k].length === 0) ctx.addIssue({ code: 'custom', path: [k], message: `有結論的產品 ${k} 至少一筆` });
+      }
+    } else {
+      if (!p.experiment) ctx.addIssue({ code: 'custom', path: ['experiment'], message: '實驗中的產品要寫 experiment（想驗證什麼、觀察什麼）' });
+      if (p.log.length === 0) ctx.addIssue({ code: 'custom', path: ['log'], message: '實驗中的產品至少要有一筆實驗筆記' });
     }
   }),
 });

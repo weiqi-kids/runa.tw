@@ -1,6 +1,6 @@
 # runa.tw — 月奈創角｜AI產品嚴選
 
-給人看的選品網站＋給 LLM 引用的產品知識庫。純靜態：Astro 7 → GitHub Pages（repo `weiqi-kids/runa.tw`，自訂網域 `runa.tw`）。
+月奈的產品研究筆記（給人看）＋給 LLM 引用的產品知識庫。產品從「實驗中」就公開，邊用邊記，用完才下結論。純靜態：Astro 7 → GitHub Pages（repo `weiqi-kids/runa.tw`，自訂網域 `runa.tw`）。
 
 ## 收手前一定要跑
 
@@ -24,6 +24,7 @@ pnpm verify     # build → 站內連結檢查 → 測試（字級、hex、草�
 ## 資料模型
 
 `src/content.config.ts` 是唯一定義。六種 Entity：`products`（核心）、`categories`、`needs`、`comparisons`、`guides`、`brands`。
+實驗筆記掛在 `products[].experiment`／`products[].log`，不另開集合；`/lab/`（研究筆記）是彙整頁：實驗中的在上、有結論的在下。
 影音掛在 `products[].media`，不另開集合；`/media/` 只是彙整頁。
 嚴選分區（最新、本月、編輯、黑科技、冷門好物、值得關注）是 `products[].picks` 標籤，不是獨立網址。
 
@@ -31,8 +32,11 @@ pnpm verify     # build → 站內連結檢查 → 測試（字級、hex、草�
 
 1. **可空不可推論。** 官網沒寫的欄位就不填，不補「合理的預設值」。功效描述一律放「品牌宣稱（本站未驗證）」。
 2. **價格一定帶 `asOf` 與 `source`。** 不採信原價與「現省」，比較一律用售價重算，算式寫在頁面上。
-3. **每個產品至少一項 `cons`、一項 `notFitFor`。** schema 擋著`cons` 可寫成 `{ text, kind }` 標性質（`no-effect`／`side-effect`／`purchase`），來源沒講清楚就寫純字串。
-4. **`status` 預設 draft。** draft → noindex、無 JSON-LD、不進 sitemap／llms.txt、頁首掛「草稿・未實測」。實測完才改 `published`，published 必須有 `sources`。
+3. **有結論的產品至少一項 `fitFor`、`notFitFor`、`pros`、`cons`。** schema 擋著。`cons` 可寫成 `{ text, kind }` 標性質（`no-effect`／`side-effect`／`purchase`），來源沒講清楚就寫純字串。
+4. **`status` 管公開，`stage` 管研究進度，兩者分開。**
+   `status` 預設 draft：draft → noindex、無 JSON-LD、不進 sitemap／llms.txt、頁首掛「草稿・未實測」。published 必須有 `sources`。
+   `stage`：`testing`（實驗中）要有 `experiment`（想驗證什麼、觀察什麼）與至少一筆 `log`，不輸出 Review 結構化資料（測試擋著）；`concluded`（有結論，預設值）要符合第 3 條。實驗中的頁面可以 published。
+   實驗筆記只記真的發生過的事：開始前的功課 Claude 可以從官網整理，使用中的觀察要月奈提供，不代寫。
    正式站的列表頁（首頁、嚴選、品類、需求、比較列表、搜尋）只列 published（`listed()`），草稿只能用直接網址打開給站主審閱。測試擋著。
 5. **網址發出就不變。** 檔名＝slug。改名要做 301。
 6. **YAML 陣列裡有千分位逗號要加引號**：`['NT$4,380']`，否則會被拆成兩個值。

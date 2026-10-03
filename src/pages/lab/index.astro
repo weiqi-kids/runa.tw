@@ -1,0 +1,52 @@
+---
+// 研究筆記：實驗中的產品在上面（依最新一筆筆記排序），有結論的在下面。
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { all, listed, path, ymd, isTesting, latestLog } from '../../lib/site';
+import { LOG_KINDS } from '../../content.config';
+
+const products = await listed('products');
+const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
+const newest = (p: (typeof products)[number]) => +(latestLog(p.data.log)?.date ?? p.data.updatedAt);
+const testing = products.filter(isTesting).sort((a, b) => newest(b) - newest(a));
+const concluded = products.filter((p) => !isTesting(p)).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt);
+---
+<Base title="研究筆記" description="月奈正在研究的產品：開始前的功課、使用中的觀察、用完的結論，按日期記在每一頁。"
+  crumbs={[{ name: '研究筆記', path: path.lab }]}>
+  <div class="shell">
+    <header class="page-hd">
+      <p class="kicker">研究筆記</p>
+      <h1>月奈正在研究的東西</h1>
+      <p class="lead">每個產品從開始用之前就公開：想驗證什麼、要觀察什麼，用的過程按日期記下來，用完才寫結論。</p>
+    </header>
+
+    {testing.length > 0 && (
+      <section class="block" id="testing">
+        <h2>實驗中</h2>
+        <div class="a-lab-list">
+          {testing.map((p) => {
+            const last = latestLog(p.data.log);
+            return (
+              <article class="a-lab-item">
+                <a href={path.product(p.id)}><img src={p.data.image ?? '/images/korena/mood-gold.jpg'} alt={p.data.name} width="240" height="240" loading="lazy" /></a>
+                <div>
+                  <p><span class="a-chip a-chip-lab">實驗中{p.data.experiment?.startedAt ? `・${ymd(p.data.experiment.startedAt)} 開始` : ''}</span> <span class="muted">{brands.get(p.data.brand.id)}</span></p>
+                  <h3><a href={path.product(p.id)}>{p.data.name}</a></h3>
+                  {p.data.experiment && <p class="a-question">{p.data.experiment.question}</p>}
+                  {last && <p class="a-log-latest">{ymd(last.date)}・{LOG_KINDS[last.kind]}：<b>{last.title}</b>（共 {p.data.log.length} 則筆記）</p>}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    {concluded.length > 0 && (
+      <section class="block" id="concluded">
+        <h2>有結論了</h2>
+        <div class="grid cards">{concluded.map((p) => <ProductCard product={p} brand={brands.get(p.data.brand.id)} />)}</div>
+      </section>
+    )}
+  </div>
+</Base>

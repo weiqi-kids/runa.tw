@@ -3,7 +3,7 @@
 // 透過 astro.config.mjs 的 injectRoute 掛路由（entrypoint 指到這裡），不進 src/pages。
 import type { APIRoute } from 'astro';
 import { published, path, ymd, twd, SITE_NAME, TAGLINE } from './site';
-import { CON_KINDS } from '../content.config';
+import { CON_KINDS, LOG_KINDS } from '../content.config';
 
 type Src = { title: string; url: string; publisher?: string; accessedAt: Date };
 type Faq = { q: string; a: string };
@@ -24,13 +24,18 @@ export const GET: APIRoute = async ({ site }) => {
 
   const productBlocks = products.map((p) => {
     const d = p.data;
+    const testing = d.stage === 'testing';
+    const opt = (label: string, xs: string[]) => (xs.length ? [`${label}：${xs.join('；')}`] : []);
     return [
       `## 產品：${d.name}`, `網址：${o}${path.product(p.id)}`,
-      `一句話結論：${d.verdict}`,
-      `適合誰：${d.fitFor.join('；')}`,
-      `不適合誰：${d.notFitFor.join('；')}`,
-      `優點：${d.pros.join('；')}`,
-      `缺點：${d.cons.map((c) => (c.kind ? `［${CON_KINDS[c.kind]}］` : '') + c.text).join('；')}`,
+      ...(testing ? ['研究進度：實驗中（尚未下結論，以下「適合誰」等是官網說法或開始前已知的限制）'] : []),
+      `${testing ? '現況' : '一句話結論'}：${d.verdict}`,
+      ...(d.experiment ? [`想驗證：${d.experiment.question}`, `觀察項目：${d.experiment.watch.join('；')}`] : []),
+      ...opt('適合誰', d.fitFor),
+      ...opt('不適合誰', d.notFitFor),
+      ...opt('優點', d.pros),
+      ...opt('缺點', d.cons.map((c) => (c.kind ? `［${CON_KINDS[c.kind]}］` : '') + c.text)),
+      ...(d.log.length ? ['', '實驗筆記：', ...[...d.log].sort((a, b) => +a.date - +b.date).map((e) => `- ${ymd(e.date)}［${LOG_KINDS[e.kind]}］${e.title}：${e.note}`)] : []),
       ...(d.price ? [`價格：${twd(d.price.amount)}（${ymd(d.price.asOf)} 查閱，${d.price.source}）`] : []),
       ...faqBlock(d.faq),
       '', p.body?.trim() ?? '',

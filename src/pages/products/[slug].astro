@@ -8,7 +8,7 @@ import Share from '../../components/Share.astro';
 import { showcase, COUPON } from '../../lib/showcase';
 import { outbound } from '../../lib/affiliate';
 import { all, listed, path, twd, ymd, isDraft, MEDIA_LABEL } from '../../lib/site';
-import { PICKS, CON_KINDS } from '../../content.config';
+import { PICKS, CON_KINDS, STAGES, LOG_KINDS } from '../../content.config';
 
 export async function getStaticPaths() {
   return (await all('products')).map((p) => ({ params: { slug: p.id }, props: { product: p } }));
@@ -22,6 +22,11 @@ const needs = await getEntries(d.needs);
 const competitors = await getEntries(d.competitors);
 const comparisons = (await listed('comparisons')).filter((c) => c.data.products.some((p) => p.id === product.id));
 const draft = isDraft(product);
+const testing = d.stage === 'testing';
+// 實驗筆記：新的在上面。有開始日就標「第 N 天」（開始那天是第 1 天），開始前的功課不標。
+const start = d.experiment?.startedAt;
+const dayOf = (dt: Date) => (start && +dt >= +start ? Math.floor((+dt - +start) / 86400000) + 1 : null);
+const log = [...d.log].sort((a, b) => +b.date - +a.date);
 
 const site = Astro.site!.toString().replace(/\/$/, '');
 const url = `${site}${path.product(product.id)}`;
@@ -50,14 +55,17 @@ const jsonLd: object[] = [
         url: d.buy[0]?.url ?? d.price.source,
       },
     } : {}),
-    review: {
-      '@type': 'Review',
-      author: { '@type': 'Organization', name: '月奈創角', url: `${site}/` },
-      datePublished: ymd(d.publishedAt),
-      reviewBody: d.verdict,
-      positiveNotes: list(d.pros),
-      negativeNotes: list(d.cons.map((c) => c.text)),
-    },
+    // 實驗中還沒有結論，不輸出評論
+    ...(testing ? {} : {
+      review: {
+        '@type': 'Review',
+        author: { '@type': 'Organization', name: '月奈創角', url: `${site}/` },
+        datePublished: ymd(d.publishedAt),
+        reviewBody: d.verdict,
+        positiveNotes: list(d.pros),
+        negativeNotes: list(d.cons.map((c) => c.text)),
+      },
+    }),
   },
   {
     '@context': 'https://schema.org',
@@ -95,7 +103,8 @@ if (d.faq.length) jsonLd.push({
 
 const { pickIf } = await showcase();
 const hero = d.image ?? '/images/korena/mood-gold.jpg';
-const gallery = [...new Set([hero, '/images/korena/promo.jpg', '/images/korena/set-5.png', '/images/korena/mood-gold.jpg'])].slice(0, 3);
+const gallery = d.gallery.length ? [hero, ...d.gallery].slice(0, 3) : [];
+const hasCompare = pickIf.some((p) => p.entry.id === product.id);
 const buy = d.buy[0];
 const go = buy ? outbound(buy.url, brand) : null;
 // 折扣碼只掛在同一檔活動的產品上（以購買連結網址判斷，不另設欄位）
@@ -119,18 +128,19 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
       <figure class="a-polaroid">
         <span class="a-tape"></span>
         <img src={hero} alt={d.name} width="600" height="750" />
-        <figcaption>{brand.data.name} ✦ 月奈嚴選</figcaption>
+        <figcaption>{brand.data.name} ✦ {testing ? '實驗中' : '月奈嚴選'}</figcaption>
       </figure>
-      <div class="a-thumbs">{gallery.map((g) => <img src={g} alt="" loading="lazy" width="96" height="96" />)}</div>
+      {gallery.length > 0 && <div class="a-thumbs">{gallery.map((g) => <img src={g} alt="" loading="lazy" width="96" height="96" />)}</div>}
     </div>
 
     <div>
       <p>
+        {testing && <><span class="a-chip a-chip-lab">{STAGES.testing}{start ? `・${ymd(start)} 開始` : ''}</span> </>}
         <a class="a-chip" href={path.brand(brand.id)}>{brand.data.name}</a>
         {d.picks.map((k) => <> <a class="a-chip a-chip-mint" href={`/picks/#${k}`}>{PICKS[k]}</a></>)}
       </p>
       <h1>{d.name}</h1>
-      <div class="a-say"><p>{d.verdict}</p></div>
+      <div class={testing ? 'a-say a-say-lab' : 'a-say'}><p>{d.verdict}</p></div>
 
       {d.price && <p class="a-bigprice">{twd(d.price.amount)}<small><a href={d.price.source} rel="nofollow noopener" target="_blank">{ymd(d.price.asOf)} 官網價</a></small></p>}
       {coupon && (
@@ -144,7 +154,8 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
       )}
       <div class="a-cta-row">
         {buy && go && <a class="a-btn a-btn-main" href={go.href} target="_blank" rel={go.rel} data-out={product.id} data-brand={brand.id} data-place="hero">{buy.label} ↗</a>}
-        <a class="a-btn a-btn-ghost" href="#compare">跟其他組比比看</a>
+        {testing && <a class="a-btn a-btn-ghost" href="#lab">看實驗筆記</a>}
+        {hasCompare && <a class="a-btn a-btn-ghost" href="#compare">跟其他組比比看</a>}
       </div>
       <div style="margin-top:1.5rem"><Share url={`${site}${path.product(product.id)}`} text={`月奈推薦：${d.name}——${d.verdict}`} /></div>
     </div>
@@ -153,24 +164,52 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
   <section class="a-sec a-band" id="why">
     <div class="a-shell a-prod" style="padding:0">
       <div>
-        <h2>為什麼月奈選它</h2>
+        <h2>{testing ? '為什麼想研究它' : '為什麼月奈選它'}</h2>
         <p>{d.whySelected}</p>
+        {d.experiment && <>
+          <h3>這次想驗證</h3>
+          <p class="a-question">{d.experiment.question}</p>
+        </>}
       </div>
       <div>
-        <h2>盒子裡有什麼</h2>
+        <h2>{testing ? '成分與配方' : '盒子裡有什麼'}</h2>
         <ul class="a-list">{d.highlights.map((h) => <li>{h}</li>)}</ul>
       </div>
     </div>
   </section>
 
+  {d.experiment && (
+    <section class="a-sec" id="lab">
+      <div class="a-shell">
+        <header class="a-sec-hd"><h2>實驗筆記</h2><p>按日期記，新的在上面{testing && '・用完才下結論'}</p></header>
+        <div class="a-lab">
+          <div class="a-watch">
+            <h3>要觀察的事</h3>
+            <ol>{d.experiment.watch.map((w) => <li>{w}</li>)}</ol>
+          </div>
+          <ol class="a-log">
+            {log.map((e) => (
+              <li class={`a-log-${e.kind}`}>
+                <p class="a-log-meta"><time datetime={ymd(e.date)}>{ymd(e.date)}</time> <span class="a-chip">{dayOf(e.date) ? `第 ${dayOf(e.date)} 天` : LOG_KINDS[e.kind]}</span></p>
+                <h3>{e.title}</h3>
+                <p>{e.note}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {(d.fitFor.length > 0 || d.notFitFor.length > 0 || d.cons.length > 0) && (
   <section class="a-sec" id="fit">
     <div class="a-shell a-fit">
-      <div>
-        <h3>適合你，如果你是…</h3>
+      {d.fitFor.length > 0 && <div>
+        <h3>{testing ? '官網說適合…' : '適合你，如果你是…'}</h3>
         <ul>{d.fitFor.map((x) => <li>{x}</li>)}</ul>
-      </div>
+      </div>}
       <div>
-        <h3>先想一下，如果你是…</h3>
+        <h3>{testing ? '開始前就知道的限制' : '先想一下，如果你是…'}</h3>
         <ul>
           {d.notFitFor.map((x) => <li>{x}</li>)}
           {d.cons.map((c) => <li>{c.kind && <><span class="a-chip">{CON_KINDS[c.kind]}</span> </>}{c.text}</li>)}
@@ -178,8 +217,9 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
       </div>
     </div>
   </section>
+  )}
 
-  {pickIf.some((p) => p.entry.id === product.id) && (
+  {hasCompare && (
     <section class="a-sec a-band a-band-butter" id="compare">
       <div class="a-shell">
         <header class="a-sec-hd"><h2>三組怎麼選？</h2>{comparisons[0] && <p><a href={path.comparison(comparisons[0].id)}>看完整比較表 →</a></p>}</header>
@@ -202,7 +242,7 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
 
     {d.specs.length > 0 && (
       <section class="block" id="specs">
-        <h2>規格與效期</h2>
+        <h2>{testing ? '規格與成分' : '規格與效期'}</h2>
         <div class="table-wrap">
           <table class="data">
             <tbody>{d.specs.map((s) => <tr><th scope="row">{s.label}</th><td>{s.value}</td></tr>)}</tbody>
