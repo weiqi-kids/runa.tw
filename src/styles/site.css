@@ -293,7 +293,7 @@ p { margin: 0 0 1rem; }
 
 .btn { display: inline-block; font-weight: 700; font-size: var(--text-sm); text-decoration: none; color: var(--a-paper); background: var(--a-berry); border: 2px solid var(--a-ink); border-radius: 999px; padding: 0.6rem 1.5rem; box-shadow: var(--a-shadow); }
 
-.prose { max-width: 38em; }
+.prose { max-width: 46em; }
 .prose li { margin-bottom: 0.4rem; }
 .faq details { background: var(--a-paper); border: 2px solid var(--a-ink); border-radius: 16px; padding: 1rem 1.3rem; margin-bottom: 0.8rem; }
 .faq summary { font-weight: 700; cursor: pointer; font-size: var(--text-sm); }
@@ -308,6 +308,11 @@ p { margin: 0 0 1rem; }
 .data thead th { background: var(--a-ink); color: var(--a-butter); }
 .data thead a { color: var(--a-butter); }
 .data tbody th { font-weight: 700; white-space: nowrap; }
+/* 文章內的 markdown 表格（指南、產品頁內文）：跟 .data 同一套樣式，窄螢幕可橫向捲動 */
+.prose table { display: block; overflow-x: auto; border-collapse: collapse; font-size: var(--text-sm); background: var(--a-paper); border: 2px solid var(--a-ink); border-radius: var(--a-r); margin: 1.2rem 0; }
+.prose th, .prose td { padding: 0.7rem 0.9rem; text-align: left; border-bottom: 2px dotted var(--a-line); vertical-align: top; min-width: 6em; }
+.prose thead th { background: var(--a-ink); color: var(--a-butter); white-space: nowrap; }
+.prose tbody td:first-child { font-weight: 700; white-space: nowrap; }
 .cmp td.win { background: var(--a-mint); font-weight: 700; }
 .pick-if { list-style: none; padding: 0; display: grid; gap: 0.8rem; }
 .pick-if li { display: grid; grid-template-columns: 1fr auto minmax(0, 18rem); gap: 1rem; align-items: center; background: var(--a-paper); border: 2px solid var(--a-ink); border-radius: var(--a-r); padding: 1rem 1.4rem; }
