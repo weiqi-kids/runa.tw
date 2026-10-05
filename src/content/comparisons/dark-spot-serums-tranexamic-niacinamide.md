@@ -1,6 +1,6 @@
 ---
 status: published
-title: 淡斑精華怎麼選？BFFECT 修修瓶、寶拉珍選 3% 傳明酸、理膚寶水 MELA B3
+title: 淡斑精華推薦怎麼選？BFFECT 修修瓶、寶拉珍選 3% 傳明酸、理膚寶水 MELA B3
 products: [bffect-tranexamic-acid-2-whitening-serum]
 externals:
   - id: paulas-choice-txa

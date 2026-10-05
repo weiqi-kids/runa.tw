@@ -32,7 +32,7 @@ if (d.faq.length) jsonLd.push({
   mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
 });
 ---
-<Base title={`${d.name}怎麼選`} description={d.answer} draft={isDraft(category)} jsonLd={jsonLd}
+<Base title={`${d.name}推薦：怎麼選`} description={d.answer} draft={isDraft(category)} jsonLd={jsonLd}
   crumbs={[{ name: '找產品', path: '/categories/' }, { name: d.name, path: path.category(category.id) }]}>
   <article class="shell">
     <header class="page-hd">

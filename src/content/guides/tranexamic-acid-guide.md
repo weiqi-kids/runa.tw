@@ -37,6 +37,10 @@ sources:
     url: https://www.chhw.mohw.gov.tw?aid=337&pid=0&page_name=detail&iid=568
     publisher: 衛生福利部彰化醫院 美容醫學中心
     accessedAt: 2026-10-03
+  - title: 美白藥品（台大醫網第 181 期）
+    url: https://health3.ntuh.gov.tw/PDFView/39/2210/2141
+    publisher: 臺大醫院藥劑部 姜俐安藥師
+    accessedAt: 2026-10-06
   - title: 3%傳明酸淡斑喚白精華乳
     url: https://www.paulaschoice.com.tw/serum/clinical-discoloration-repair-serum/8040
     publisher: PAULA'S CHOICE 寶拉珍選 台灣官網
@@ -46,7 +50,7 @@ sources:
     publisher: BFFECT 官網
     accessedAt: 2026-10-03
 publishedAt: 2026-10-03
-updatedAt: 2026-10-03
+updatedAt: 2026-10-06
 ---
 
 ## 傳明酸是什麼
@@ -70,6 +74,8 @@ updatedAt: 2026-10-03
 ## 吃的傳明酸，為什麼一定要看醫生
 
 衛福部彰化醫院把口服傳明酸列為肝斑的治療之一，但也寫明肝斑要經專業醫師評估。2026 年的文獻回顧說，口服傳明酸在**篩檢過禁忌症**的人身上沒有明顯增加血栓風險，研究裡也沒有出現重大血栓事件。重點在篩檢：有沒有血栓病史這類禁忌症，要醫師問過才知道。不要自己網購來吃。
+
+臺大醫院藥劑部也提醒：衛福部核准傳明酸用在美白的只有外用，口服和注射拿來淡斑都屬於仿單核准適應症外使用，發生嚴重不良反應不適用藥害救濟。打的「美白針」見[美白針有效嗎？](/guides/whitening-injection/)。
 
 ## 擦的傳明酸怎麼挑
 

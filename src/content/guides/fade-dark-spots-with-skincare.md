@@ -56,7 +56,7 @@ sources:
     publisher: Journal of Cosmetic Dermatology（2026）
     accessedAt: 2026-10-03
 publishedAt: 2026-10-03
-updatedAt: 2026-10-03
+updatedAt: 2026-10-06
 ---
 
 ## 問題是什麼
@@ -107,6 +107,8 @@ updatedAt: 2026-10-03
 - **痘痘留下的咖啡色印子** → 防曬加美白成分，給它時間。紅的、凹凸的痘疤處理方式不同，見[痘疤怎麼淡化？](/guides/acne-marks-fading/)
 - **凸起來的斑** → 保養品處理不了，要看皮膚科。斑變大、變色、流血或潰瘍，更要盡快看。
 - **只是覺得膚色不夠白** → 食藥署說得很直接：美白產品不會改變原本的膚色。
+
+確定要擦淡斑精華，怎麼擦、擦多久見[淡斑精華怎麼用？](/guides/how-to-use-dark-spot-serum/)。
 
 ## 擦美白保養品要注意什麼
 

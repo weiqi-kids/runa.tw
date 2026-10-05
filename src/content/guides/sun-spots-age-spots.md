@@ -31,7 +31,7 @@ sources:
     publisher: 臺大醫院健康教育中心
     accessedAt: 2026-10-03
 publishedAt: 2026-10-03
-updatedAt: 2026-10-03
+updatedAt: 2026-10-06
 ---
 
 ## 「老人斑」其實是兩種東西
