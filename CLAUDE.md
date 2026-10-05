@@ -19,6 +19,7 @@ pnpm verify     # build → 站內連結檢查 → 測試（字級、hex、草�
 | `pnpm seo [index\|traffic\|clicks\|audience\|submit]` | GSC 收錄與曝光、GA 流量、購買按鈕點擊、讀者輪廓、提交 sitemap |
 | `pnpm orders [brands] [--days N]` | iChannels 訂單與獎金、已加入的品牌（金鑰在 `.env`） |
 | `pnpm picks [--top N] [--offline]` | 選品候選排名（見 `docs/選品SOP.md`） |
+| `pnpm keywords <種子字>… [--plain]` | Google 搜尋建議字，規劃系列與標題（對照表在 `docs/關鍵字規劃.md`） |
 | `pnpm sync:tokens` | 從上游同步設計 token |
 
 ## 資料模型
@@ -45,6 +46,7 @@ pnpm verify     # build → 站內連結檢查 → 測試（字級、hex、草�
 ## 選品
 
 網站是用來解決讀者的問題：**先有問題頁（指南／需求），產品是其中一個選項**，不從佣金排名出發。
+讀者怎麼搜，用 `pnpm keywords` 查，對照表在 `docs/關鍵字規劃.md`。療程（雷射、電波、藥膏）的資料照樣整理，只是不推薦診所、不替讀者決定療程。
 流程照 `docs/選品SOP.md`：`pnpm picks` 出候選（品牌條件 × 站上定位 × GSC／GA 需求），人工篩選後才建頁。
 競品與指南的參考資料可用 Amazon 評論分析報告（ecommerce.weiqi.kids），用法、引用限制、指南骨架都在 SOP。
 品牌清單匯出在 `data/private/`（會員限定資料，不進版控）。

@@ -16,6 +16,7 @@
     "verify": "astro build && node scripts/check-links.mjs && node --test \"test/**/*.test.mjs\"",
     "seo": "node scripts/seo-status.mjs",
     "picks": "node scripts/pick-candidates.mjs",
+    "keywords": "node scripts/suggest-keywords.mjs",
     "orders": "node scripts/ichannels.mjs"
   },
   "dependencies": {
