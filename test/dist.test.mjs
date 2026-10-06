@@ -100,3 +100,22 @@ test('實驗中的產品：頁面標「實驗中」、有實驗筆記、結構�
     }
   }
 });
+
+test('正式建置：證據鏈輸出——引用標號都連得到來源、JSON-LD 帶 citation', { skip: !isProd }, async () => {
+  const drafts = new Set(await draftPaths());
+  for (const dir of ['guides', 'comparisons', 'products']) {
+    for (const f of (await readdir(path.resolve('src/content', dir))).filter((n) => n.endsWith('.md'))) {
+      const p = `/${dir}/${f.replace(/\.md$/, '')}/`;
+      if (drafts.has(p)) continue;
+      const html = await read(`${p}index.html`);
+      assert.doesNotMatch(html, /〔\d/, `${p} 還有沒轉成連結的〔n〕`);
+      const ids = new Set([...html.matchAll(/<li id="(src-\d+)"/g)].map((m) => m[1]));
+      for (const m of html.matchAll(/<sup class="cite">[\s\S]*?<\/sup>/g)) {
+        for (const a of m[0].matchAll(/href="#(src-\d+)"/g)) assert.ok(ids.has(a[1]), `${p} 引用 #${a[1]} 但頁尾沒有這筆來源`);
+      }
+      const citations = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+        .map((m) => JSON.parse(m[1])).flatMap((ld) => (Array.isArray(ld) ? ld : [ld])).find((ld) => ld.citation)?.citation ?? [];
+      assert.equal(citations.length, ids.size, `${p} JSON-LD citation 有 ${citations.length} 筆，頁尾來源 ${ids.size} 筆`);
+    }
+  }
+});

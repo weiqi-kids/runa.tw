@@ -9,8 +9,21 @@ products: [korena-caviar-5-piece-set, korena-classic-11-piece-set, korena-luxe-1
 faq:
   - q: 贈品要不要算進價值？
     a: 手鏡、化妝包、體驗包對你有用才算。比較組合時先不算，最後再當加分。
+sources:
+  - title: 【1010秋日奢養】入門首選❗️魚子初見5入組
+    url: https://www.korena.tw/products/korena-1010autumn-5sale
+    publisher: KORENA 官網
+    accessedAt: 2026-09-29
+  - title: 【1010秋日奢養】最多人買❗️凍齡經典11件組
+    url: https://www.korena.tw/products/korena-1010autumn-11sale
+    publisher: KORENA 官網
+    accessedAt: 2026-09-29
+  - title: 【1010秋日奢養】最划算❗️臻藏奢養17件組
+    url: https://www.korena.tw/products/korena-1010autumn-17sale
+    publisher: KORENA 官網
+    accessedAt: 2026-09-29
 publishedAt: 2026-09-29
-updatedAt: 2026-09-29
+updatedAt: 2026-10-06
 ---
 
 ## 步驟一：先列出正裝品
@@ -19,7 +32,7 @@ updatedAt: 2026-09-29
 
 ## 步驟二：售價 ÷ 正裝瓶數
 
-用實際售價除以正裝瓶數，就知道每一瓶平均多少錢。以 KORENA 秋季活動為例，17 件組平均每瓶約 NT$1,427，是三組裡最低的。詳細見 [KORENA 三組比較](/comparisons/korena-5-vs-11-vs-17-piece-set/)。
+用實際售價除以正裝瓶數，就知道每一瓶平均多少錢。以 KORENA 秋季活動為例，17 件組平均每瓶約 NT$1,427，是三組裡最低的〔1,2,3〕。詳細見 [KORENA 三組比較](/comparisons/korena-5-vs-11-vs-17-piece-set/)。
 
 ## 步驟三：對照效期，算用不用得完
 

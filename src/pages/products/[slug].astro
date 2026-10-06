@@ -7,7 +7,7 @@ import ProductCard from '../../components/ProductCard.astro';
 import Share from '../../components/Share.astro';
 import { showcase, COUPON } from '../../lib/showcase';
 import { outbound } from '../../lib/affiliate';
-import { all, listed, path, twd, ymd, isDraft, MEDIA_LABEL } from '../../lib/site';
+import { all, listed, path, twd, ymd, isDraft, citationLd, MEDIA_LABEL } from '../../lib/site';
 import { PICKS, CON_KINDS, STAGES, LOG_KINDS } from '../../content.config';
 
 export async function getStaticPaths() {
@@ -76,14 +76,7 @@ const jsonLd: object[] = [
     datePublished: ymd(d.publishedAt),
     dateModified: ymd(d.updatedAt),
     about: { '@id': `${url}#product` },
-    ...(d.sources.length ? {
-      citation: d.sources.map((s) => ({
-        '@type': 'CreativeWork',
-        name: s.title,
-        url: s.url,
-        ...(s.publisher ? { publisher: { '@type': 'Organization', name: s.publisher } } : {}),
-      })),
-    } : {}),
+    ...citationLd(d.sources),
   },
   ...d.media.filter((m) => m.uploadDate && m.thumbnail).map((m) => ({
     '@context': 'https://schema.org',

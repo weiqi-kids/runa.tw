@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Answer from '../../components/Answer.astro';
 import Faq from '../../components/Faq.astro';
 import Sources from '../../components/Sources.astro';
-import { all, path, isDraft } from '../../lib/site';
+import { all, path, ymd, isDraft, citationLd } from '../../lib/site';
 
 export async function getStaticPaths() {
   return (await all('comparisons')).map((c) => ({ params: { slug: c.id }, props: { cmp: c } }));
@@ -26,6 +26,13 @@ const category = products[0] ? await getEntry(products[0].data.category) : null;
 
 const site = Astro.site!.toString().replace(/\/$/, '');
 const jsonLd: object[] = [{
+  '@context': 'https://schema.org', '@type': 'Article',
+  headline: d.title, description: d.answer, inLanguage: 'zh-Hant-TW', dateModified: ymd(d.updatedAt),
+  author: { '@type': 'Organization', name: '月奈創角', url: `${site}/` },
+  publisher: { '@id': `${site}/#org` },
+  mainEntityOfPage: `${site}${path.comparison(cmp.id)}`,
+  ...citationLd(d.sources),
+}, {
   '@context': 'https://schema.org', '@type': 'ItemList', name: d.title,
   numberOfItems: columns.length,
   itemListElement: columns.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, ...(c.href ? { url: `${site}${c.href}` } : {}) })),

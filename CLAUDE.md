@@ -19,6 +19,7 @@ pnpm verify     # build → 站內連結檢查 → 測試（字級、hex、草�
 | `pnpm seo [index\|traffic\|clicks\|audience\|submit]` | GSC 收錄與曝光、GA 流量、購買按鈕點擊、讀者輪廓、提交 sitemap |
 | `pnpm orders [brands] [--days N]` | iChannels 訂單與獎金、已加入的品牌（金鑰在 `.env`） |
 | `pnpm picks [--top N] [--offline]` | 選品候選排名（見 `docs/選品SOP.md`） |
+| `pnpm sources` | 逐一連線 published 頁面的資料來源，列出打不開的（不在 verify 裡：醫院網站常擋機器人） |
 | `pnpm keywords <種子字>… [--plain]` | Google 搜尋建議字，規劃系列與標題（對照表在 `docs/關鍵字規劃.md`） |
 | `pnpm sync:tokens` | 從上游同步設計 token |
 
@@ -41,8 +42,9 @@ pnpm verify     # build → 站內連結檢查 → 測試（字級、hex、草�
    實驗筆記只記真的發生過的事：開始前的功課 Claude 可以從官網整理，使用中的觀察要月奈提供，不代寫。
    正式站的列表頁（首頁、嚴選、品類、需求、比較列表、搜尋）只列 published（`listed()`），草稿只能用直接網址打開給站主審閱。測試擋著。
 5. **網址發出就不變。** 檔名＝slug。改名要做 301。
-6. **YAML 陣列裡有千分位逗號要加引號**：`['NT$4,380']`，否則會被拆成兩個值。
-7. **產品頁只給要上架的產品**（自家選品、可分潤）。競品只放在比較頁的 `externals`：只在比較表出現，不建產品頁、不放購買連結，官方網址只當資料來源。
+6. **證據鏈：內文的事實句要標〔n〕。** 含數字、或寫「醫院／衛福部／研究／官網說」的句子，句尾標〔n〕，n 是頁尾 `sources` 第 n 筆（建置後轉成上標連結，JSON-LD 輸出 `citation`）。指南的每筆來源都要在內文被引用；查不到的事寫「沒有查到」，不編。`answer`／`faq` 不寫〔n〕。細則與例外在 `docs/選品SOP.md`「證據鏈」，`test/evidence.test.mjs` 擋著。
+7. **YAML 陣列裡有千分位逗號要加引號**：`['NT$4,380']`，否則會被拆成兩個值。
+8. **產品頁只給要上架的產品**（自家選品、可分潤）。競品只放在比較頁的 `externals`：只在比較表出現，不建產品頁、不放購買連結，官方網址只當資料來源。
 
 ## 選品
 

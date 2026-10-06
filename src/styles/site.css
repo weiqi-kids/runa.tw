@@ -299,7 +299,10 @@ p { margin: 0 0 1rem; }
 .faq summary { font-weight: 700; cursor: pointer; font-size: var(--text-sm); }
 .faq details p { margin: 0.6rem 0 0; font-size: var(--text-sm); color: var(--a-soft); }
 .sources { padding-left: 1.4em; font-size: var(--text-xs); }
-.sources li { margin-bottom: 0.4rem; }
+.sources li { margin-bottom: 0.4rem; scroll-margin-top: 6rem; }
+.sources li:target { background: var(--a-paper); outline: 2px solid var(--a-ink); border-radius: 8px; }
+.cite { font-size: var(--text-xs); line-height: 0; margin-left: 0.1em; }
+.cite a { text-decoration: none; }
 .changelog { list-style: none; padding: 0; font-size: var(--text-xs); }
 
 .table-wrap { position: relative; overflow-x: auto; background: var(--a-paper); border: 2px solid var(--a-ink); border-radius: var(--a-r); }

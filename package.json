@@ -17,6 +17,7 @@
     "seo": "node scripts/seo-status.mjs",
     "picks": "node scripts/pick-candidates.mjs",
     "keywords": "node scripts/suggest-keywords.mjs",
+    "sources": "node scripts/check-sources.mjs",
     "orders": "node scripts/ichannels.mjs"
   },
   "dependencies": {

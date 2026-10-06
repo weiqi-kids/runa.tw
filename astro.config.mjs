@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { citeIntegration } from './src/lib/cite.mjs';
 
 // 正式網域。開發期部署在 *.workers.dev，但 canonical 一開始就指向正式網域，切換時不用改頁面。
 const SITE = process.env.PUBLIC_SITE_URL ?? 'https://runa.tw';
@@ -73,5 +74,6 @@ export default defineConfig({
       },
     }),
     llmsFull,
+    citeIntegration,
   ],
 });

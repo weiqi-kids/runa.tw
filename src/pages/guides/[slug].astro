@@ -5,7 +5,7 @@ import Answer from '../../components/Answer.astro';
 import Faq from '../../components/Faq.astro';
 import Sources from '../../components/Sources.astro';
 import ProductCard from '../../components/ProductCard.astro';
-import { all, path, ymd, isDraft } from '../../lib/site';
+import { all, path, ymd, isDraft, citationLd } from '../../lib/site';
 
 export async function getStaticPaths() {
   return (await all('guides')).map((g) => ({ params: { slug: g.id }, props: { guide: g } }));
@@ -25,6 +25,7 @@ const jsonLd: object[] = [{
   author: { '@type': 'Organization', name: '月奈創角', url: `${site}/` },
   publisher: { '@id': `${site}/#org` },
   mainEntityOfPage: `${site}${path.guide(guide.id)}`,
+  ...citationLd(d.sources),
 }];
 if (d.faq.length) jsonLd.push({
   '@context': 'https://schema.org', '@type': 'FAQPage',

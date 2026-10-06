@@ -9,7 +9,7 @@ type Src = { title: string; url: string; publisher?: string; accessedAt: Date };
 type Faq = { q: string; a: string };
 
 const citeBlock = (sources: Src[]) => sources.length
-  ? ['', '資料來源：', ...sources.map((s) => `- ${s.title}${s.publisher ? `（${s.publisher}）` : ''}・查閱於 ${ymd(s.accessedAt)}：${s.url}`)]
+  ? ['', '資料來源（內文的〔n〕對應第 n 筆）：', ...sources.map((s, i) => `${i + 1}. ${s.title}${s.publisher ? `（${s.publisher}）` : ''}・查閱於 ${ymd(s.accessedAt)}：${s.url}`)]
   : [];
 
 const faqBlock = (faq: Faq[]) => faq.length

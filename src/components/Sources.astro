@@ -7,8 +7,8 @@ const { items } = Astro.props;
 <section class="block" id="sources">
   <h2>資料來源</h2>
       <ol class="sources">
-        {items.map((s) => (
-          <li>
+        {items.map((s, i) => (
+          <li id={`src-${i + 1}`}>
             <a href={s.url} rel="nofollow noopener" target="_blank">{s.title}</a>
             {s.publisher && <span class="muted">・{s.publisher}</span>}
             <span class="muted">・查閱於 <time datetime={ymd(s.accessedAt)}>{ymd(s.accessedAt)}</time></span>

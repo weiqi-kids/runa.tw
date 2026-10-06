@@ -58,6 +58,15 @@ export const path = {
 };
 
 export const ymd = (d: Date) => d.toISOString().slice(0, 10);
+
+// JSON-LD 的 citation：頁尾「資料來源」原樣輸出，順序與內文〔n〕一致。AI 引用時才找得到出處。
+export const citationLd = (sources: { title: string; url: string; publisher?: string }[]) =>
+  sources.length ? {
+    citation: sources.map((s) => ({
+      '@type': 'CreativeWork', name: s.title, url: s.url,
+      ...(s.publisher ? { publisher: { '@type': 'Organization', name: s.publisher } } : {}),
+    })),
+  } : {};
 export const twd = (n: number) => `NT$${n.toLocaleString('en-US')}`;
 
 export const MEDIA_LABEL = { youtube: 'YouTube', shorts: 'Shorts', instagram: 'Instagram', reels: 'Reels' } as const;
