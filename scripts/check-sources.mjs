@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 資料來源還活著嗎：逐一連線 src/content 裡 published 頁面的 sources 網址，列出打不開的。
 // 不放進 pnpm verify：政府與醫院網站常擋海外或機器人連線（例如臺北榮總回 403），CI 上會誤報。
-// 打不開的先用瀏覽器確認；真的下架就換來源或改寫句子，不要留著死連結。
+// 打不開的先用瀏覽器確認，再到原網站找現行版本（醫院收費表常換檔名）並重新核對數字；找遍了都沒有才換來源。
 //
 //   pnpm sources
 import { readdir, readFile } from 'node:fs/promises';
