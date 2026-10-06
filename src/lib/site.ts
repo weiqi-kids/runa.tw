@@ -19,10 +19,36 @@ export const NAV = [
   { href: '/categories/', label: '找產品' },
   { href: '/needs/', label: '找需求' },
   { href: '/comparisons/', label: '產品比較' },
-  { href: '/guides/', label: '深度選品' },
+  { href: '/guides/', label: '指南' },
   { href: '/media/', label: '影音' },
   { href: '/about/', label: '關於' },
 ];
+
+// 指南的主題與閱讀順序：首頁「從問題找答案」和 /guides/ 依這裡分組。
+// 每篇 published 的指南都要掛在一個主題底下（test/dist.test.mjs 擋著），新寫的指南記得加進來。
+// comparisons 是同主題的比較頁，跟在指南後面。
+export const TOPICS = [
+  {
+    id: 'spots', name: '臉上的斑', intro: '先分清楚是哪一種斑，再決定擦什麼、要不要看醫生。',
+    guides: ['fade-dark-spots-with-skincare', 'melasma-guide', 'sun-spots-age-spots', 'acne-marks-fading', 'acne-scar-pits'],
+    comparisons: [] as string[],
+  },
+  {
+    id: 'whitening', name: '美白淡斑成分與產品', intro: '傳明酸、熊果素、維他命 C、淡斑藥膏差在哪，淡斑精華怎麼挑、怎麼擦。',
+    guides: ['how-to-use-dark-spot-serum', 'tranexamic-arbutin-vitamin-c', 'tranexamic-acid-guide', 'arbutin-guide', 'whitening-cream-hydroquinone'],
+    comparisons: ['dark-spot-serums-tranexamic-niacinamide'],
+  },
+  {
+    id: 'clinic', name: '雷射與醫美', intro: '皮秒、電波、美白針的原理、價格、恢復期，打完怎麼保養。',
+    guides: ['pico-laser-guide', 'post-laser-skincare', 'radiofrequency-guide', 'whitening-injection'],
+    comparisons: [] as string[],
+  },
+  {
+    id: 'sets', name: '保養組合怎麼挑', intro: '組合怎麼算才划算，抗老精華組合怎麼比。',
+    guides: ['how-to-read-skincare-bundle'],
+    comparisons: ['anti-aging-serum-sets-5-brands', 'korena-5-vs-11-vs-17-piece-set'],
+  },
+] as const;
 
 // 找產品的大分類與排列順序。沒有品類的組別不顯示（「整理中」看起來像沒做完的網站），
 // 也不產生頁面（空頁就是薄頁）。

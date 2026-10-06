@@ -33,7 +33,7 @@ if (d.faq.length) jsonLd.push({
 });
 ---
 <Base title={d.title} description={d.answer} draft={isDraft(guide)} jsonLd={jsonLd}
-  crumbs={[{ name: '深度選品', path: '/guides/' }, { name: d.title, path: path.guide(guide.id) }]}>
+  crumbs={[{ name: '指南', path: '/guides/' }, { name: d.title, path: path.guide(guide.id) }]}>
   <article class="shell">
     <header class="page-hd">
       <p class="kicker">{d.kind}{categories.map((c) => <>・<a href={path.category(c.id)}>{c.data.name}</a></>)}</p>

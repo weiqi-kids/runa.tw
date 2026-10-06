@@ -2,7 +2,7 @@
 import { getEntries } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Share from '../components/Share.astro';
-import { listed, path, twd, ymd, isTesting, latestLog, SITE_NAME, TAGLINE } from '../lib/site';
+import { listed, path, twd, ymd, isTesting, latestLog, SITE_NAME, TAGLINE, TOPICS } from '../lib/site';
 import { showcase, SOCIAL, COUPON } from '../lib/showcase';
 import { PICKS, LOG_KINDS } from '../content.config';
 
@@ -16,7 +16,16 @@ const social = SOCIAL.filter((s) => s.url);
 const needs = await listed('needs');
 const categories = await listed('categories');
 const cmps = await Promise.all((await listed('comparisons')).slice(0, 4).map(async (c) => ({ c, ps: await getEntries(c.data.products) })));
-const guides = (await listed('guides')).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt).slice(0, 3);
+const guideMap = new Map((await listed('guides')).map((g) => [g.id, g]));
+const cmpMap = new Map((await listed('comparisons')).map((c) => [c.id, c]));
+// 「從問題找答案」：每個主題列前幾篇，順序照 TOPICS
+const topics = TOPICS.map((t) => ({
+  ...t,
+  links: [
+    ...t.guides.map((id) => guideMap.get(id)).filter((g) => !!g).map((g) => ({ href: path.guide(g!.id), title: g!.data.title, cmp: false })),
+    ...t.comparisons.map((id) => cmpMap.get(id)).filter((c) => !!c).map((c) => ({ href: path.comparison(c!.id), title: c!.data.title, cmp: true })),
+  ],
+})).filter((t) => t.links.length > 0);
 const suggestions = [...needs.map((n) => n.data.name), ...categories.map((c) => c.data.name)].slice(0, 4);
 const site = Astro.site!.toString().replace(/\/$/, '');
 const firstPick = (p: (typeof products)[number]) => p.data.picks[0];
@@ -76,6 +85,29 @@ const firstPick = (p: (typeof products)[number]) => p.data.picks[0];
               </article>
             );
           })}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {topics.length > 0 && (
+    <section class="a-sec" id="topics">
+      <div class="a-shell">
+        <header class="a-sec-hd">
+          <h2>從問題找答案</h2>
+          <p>每篇都標出資料來源　<a href="/guides/">看全部指南 →</a></p>
+        </header>
+        <div class="a-topics">
+          {topics.map((t) => (
+            <article class="a-topic">
+              <h3><a href={`/guides/#${t.id}`}>{t.name}</a></h3>
+              <p class="muted">{t.intro}</p>
+              <ul>
+                {t.links.slice(0, 4).map((l) => <li>{l.cmp && <span class="a-chip">比較</span>} <a href={l.href}>{l.title}</a></li>)}
+              </ul>
+              {t.links.length > 4 && <a class="more" href={`/guides/#${t.id}`}>還有 {t.links.length - 4} 篇 →</a>}
+            </article>
+          ))}
         </div>
       </div>
     </section>
@@ -146,15 +178,6 @@ const firstPick = (p: (typeof products)[number]) => p.data.picks[0];
         {cmps.map(({ c, ps }) => (
           <li><a href={path.comparison(c.id)}><strong>{c.data.title}</strong><span class="muted">{[...ps.map((p) => p.data.name), ...c.data.externals.map((e) => e.name)].join(' ／ ')}</span></a></li>
         ))}
-      </ul>
-    </div>
-  </section>
-
-  <section class="a-sec a-band">
-    <div class="a-shell">
-      <header class="a-sec-hd"><h2>深度選品</h2><a class="more" href="/guides/">看全部 →</a></header>
-      <ul class="guide-list">
-        {guides.map((g) => <li><a href={path.guide(g.id)}><strong>{g.data.title}</strong></a><p>{g.data.answer}</p></li>)}
       </ul>
     </div>
   </section>

@@ -119,3 +119,12 @@ test('正式建置：證據鏈輸出——引用標號都連得到來源、JSON-
     }
   }
 });
+
+test('正式建置：每篇 published 指南都掛在某個主題底下（/guides/ 找得到）', { skip: !isProd }, async () => {
+  const drafts = new Set(await draftPaths());
+  const html = await read('guides/index.html');
+  for (const f of (await readdir(path.resolve('src/content/guides'))).filter((n) => n.endsWith('.md'))) {
+    const p = `/guides/${f.replace(/\.md$/, '')}/`;
+    if (!drafts.has(p)) assert.ok(html.includes(`href="${p}"`), `${p} 沒有掛在 TOPICS（src/lib/site.ts）的任何主題，/guides/ 找不到`);
+  }
+});
