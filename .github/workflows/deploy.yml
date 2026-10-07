@@ -47,6 +47,11 @@ jobs:
           RUNA_GSC_TOKEN: ${{ vars.RUNA_GSC_TOKEN }}
         run: pnpm verify
 
+      # sitemap 不得含 noindex 頁：sitemap filter（astro.config.mjs）與頁面 noindex（Base.astro）各自判斷，
+      # 改了一邊忘了另一邊就會送出矛盾訊號。只在正式建置後跑——本機 pnpm build 是開發建置、全站 noindex，必然不過。
+      - name: 檢查 sitemap 不含 noindex 頁
+        run: node scripts/check-sitemap-noindex.mjs dist
+
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
