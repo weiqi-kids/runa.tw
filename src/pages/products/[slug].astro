@@ -154,6 +154,12 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
     </div>
   </div>
 
+  {!d.experiment && (
+    <div class="a-shell">
+      <section class="block prose" id="notes"><Content /></section>
+    </div>
+  )}
+
   <section class="a-sec a-band" id="why">
     <div class="a-shell a-prod" style="padding:0">
       <div>
@@ -216,23 +222,18 @@ const coupon = buy?.url.includes('1010autumn') ? COUPON : null;
   {hasCompare && (
     <section class="a-sec a-band a-band-butter" id="compare">
       <div class="a-shell">
-        <header class="a-sec-hd"><h2>三組怎麼選？</h2>{comparisons[0] && <p><a href={path.comparison(comparisons[0].id)}>看完整比較表 →</a></p>}</header>
-        <div class="a-who">
-          {pickIf.map((p) => (
-            <a href={path.product(p.entry.id)} aria-current={p.entry.id === product.id ? 'page' : undefined}>
-              <span class="q">「{p.if}」</span>
-              <span class="ans">→ {p.entry.data.name}{p.entry.data.price && `・${twd(p.entry.data.price.amount)}`}</span>
-            </a>
-          ))}
-        </div>
+        <header class="a-sec-hd"><h2>跟另外兩組差在哪</h2>{comparisons[0] && <p><a href={path.comparison(comparisons[0].id)}>看完整比較表 →</a></p>}</header>
+        <p>想看另外兩組的組合內容、瓶數和折扣後單價，直接看比較表。</p>
       </div>
     </section>
   )}
 
   <div class="a-shell">
-    <section class="block prose" id="notes">
-      <Content />
-    </section>
+    {d.experiment && (
+      <section class="block prose" id="notes">
+        <Content />
+      </section>
+    )}
 
     {d.specs.length > 0 && (
       <section class="block" id="specs">

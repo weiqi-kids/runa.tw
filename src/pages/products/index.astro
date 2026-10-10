@@ -1,13 +1,32 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ProductCard from '../../components/ProductCard.astro';
-import { all, listed } from '../../lib/site';
+import { all, listed, path } from '../../lib/site';
 const products = (await listed('products')).sort((a, b) => +b.data.updatedAt - +a.data.updatedAt);
 const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
+// 依品類分組：每組先放該品類的選購重點，再放產品卡。品類順序依組內最近更新的產品。
+const cats = new Map((await listed('categories')).map((c) => [c.id, c]));
+const groups = [...new Set(products.map((p) => p.data.category.id))]
+  .filter((id) => cats.has(id))
+  .map((id) => ({ cat: cats.get(id)!, items: products.filter((p) => p.data.category.id === id) }));
 ---
-<Base title="全部產品" description="月奈創角收錄的所有產品知識頁，依最後更新排序。" crumbs={[{ name: '全部產品', path: '/products/' }]}>
+<Base title="全部產品" description="月奈創角收錄的所有產品知識頁，依品類分組，每組先寫選購重點，再列各產品的適合對象與價格。" crumbs={[{ name: '全部產品', path: '/products/' }]}>
   <div class="shell">
-    <header class="page-hd"><p class="kicker">產品</p><h1>全部產品</h1></header>
-    <div class="grid cards">{products.map((p) => <ProductCard product={p} brand={brands.get(p.data.brand.id)} />)}</div>
+    <header class="page-hd"><p class="kicker">產品</p><h1>全部產品</h1>
+      <p class="lead">這裡是月奈目前收錄的 {products.length} 個產品。每一頁都寫了適合誰、不適合誰、缺點，價格附日期和官網來源。產品依品類分組；同一組裡有好幾個選項的，先看選購重點，再挑進去看。</p></header>
+    {groups.map((g) => (
+      <section class="block" id={g.cat.id}>
+        <h2>{g.cat.data.name}（{g.items.length} 項）</h2>
+        <p>{g.cat.data.answer}</p>
+        {g.cat.data.whoNeedsIt.length > 0 && <p>適合：{g.cat.data.whoNeedsIt.join('；')}。</p>}
+        {g.cat.data.howToChoose.length > 0 && <p>挑的時候依序看：{g.cat.data.howToChoose.map((h) => h.factor).join('、')}。</p>}
+        <p class="muted"><a href={path.category(g.cat.id)}>看「{g.cat.data.name}」怎麼選 →</a></p>
+        <div class="grid cards">{g.items.map((p) => <ProductCard product={p} brand={brands.get(p.data.brand.id)} />)}</div>
+      </section>
+    ))}
+    <section class="block">
+      <h2>還在猶豫？</h2>
+      <p>同一個品牌有好幾組可選時，不要直接看售價，先到<a href="/comparisons/">比較頁</a>看每一瓶實際多少錢；還在實驗中的產品，使用過程記在<a href="/lab/">研究筆記</a>，用完才下結論。</p>
+    </section>
   </div>
 </Base>

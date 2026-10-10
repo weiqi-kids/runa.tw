@@ -1,5 +1,5 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import { render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import { all, listed, path } from '../../lib/site';
@@ -9,6 +9,7 @@ export async function getStaticPaths() {
 }
 const { brand } = Astro.props as { brand: CollectionEntry<'brands'> };
 const d = brand.data;
+const { Content } = await render(brand);
 const products = (await listed('products')).filter((p) => p.data.brand.id === brand.id);
 const site = Astro.site!.toString().replace(/\/$/, '');
 const jsonLd = [{
@@ -28,6 +29,9 @@ const draft = (await all('products')).filter((p) => p.data.brand.id === brand.id
       <p class="lead">{d.summary}</p>
       {d.website && <p><a href={d.website} rel="nofollow noopener" target="_blank">官方網站 ↗</a></p>}
     </header>
+    <section class="block prose">
+      <Content />
+    </section>
     <section class="block">
       <h2>月奈創角收錄的 {d.name} 產品</h2>
       <div class="grid cards">{products.map((p) => <ProductCard product={p} />)}</div>
