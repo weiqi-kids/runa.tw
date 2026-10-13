@@ -1,8 +1,8 @@
 ---
 status: published
-title: 保養品組合怎麼挑最划算？四個步驟
+title: 保養品組合怎麼挑？四步驟看懂划不划算
 kind: 購買指南
-answer: 看保養品組合只做四件事：列出正裝品、用售價除以正裝瓶數、對照效期算用不用得完、最後才看贈品。四步做完，哪一組最適合你就很清楚了。
+answer: 保養品組合要怎麼挑最划算？四個步驟：先列出正裝品、用售價除以正裝瓶數算單價、對照效期看用不用得完、最後才看贈品。做完這四步，哪一組適合你就清楚了。
 categories: [anti-aging-skincare-sets]
 needs: [first-try-skincare]
 products: [korena-caviar-5-piece-set, korena-classic-11-piece-set, korena-luxe-17-piece-set]
@@ -23,12 +23,12 @@ sources:
     publisher: KORENA 官網
     accessedAt: 2026-09-29
 publishedAt: 2026-09-29
-updatedAt: 2026-10-06
+updatedAt: 2026-10-14
 ---
 
 ## 步驟一：先列出正裝品
 
-手鏡、化妝包、體驗包是加分，正裝品才是你付錢買的主角。先把每一組的正裝列出來，才能放在同一把尺上比。
+手鏡、化妝包、體驗包是加分，正裝品才是你付錢買的主角。先把每一組的正裝列出來，才能放在同一把尺上比。第一次試新品牌的人，可以先看[第一次試新的保養品牌](/needs/first-try-skincare/)，從最小組合開始比較安全。
 
 ## 步驟二：售價 ÷ 正裝瓶數
 
