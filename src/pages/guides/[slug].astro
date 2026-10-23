@@ -5,7 +5,7 @@ import Answer from '../../components/Answer.astro';
 import Faq from '../../components/Faq.astro';
 import Sources from '../../components/Sources.astro';
 import ProductCard from '../../components/ProductCard.astro';
-import { all, path, ymd, isDraft, citationLd } from '../../lib/site';
+import { all, listed, path, ymd, isDraft, citationLd, TOPICS } from '../../lib/site';
 
 export async function getStaticPaths() {
   return (await all('guides')).map((g) => ({ params: { slug: g.id }, props: { guide: g } }));
@@ -16,6 +16,17 @@ const { Content } = await render(guide);
 const products = await getEntries(d.products);
 const categories = await getEntries(d.categories);
 const brands = new Map((await all('brands')).map((b) => [b.id, b.data.name]));
+
+// 同主題還可以看：把指南的訪客導去同主題的比較頁（TOPICS 既有的分組與比較頁對應）
+const topic = TOPICS.find((t) => ([...t.guides] as string[]).includes(guide.id));
+const topicGuideIds = topic ? ([...topic.guides] as string[]) : [];
+const topicCmpIds = topic ? ([...topic.comparisons] as string[]) : [];
+const relatedGuides = topic
+  ? (await listed('guides'))
+      .filter((g) => g.id !== guide.id && topicGuideIds.includes(g.id))
+      .sort((a, b) => topicGuideIds.indexOf(a.id) - topicGuideIds.indexOf(b.id))
+  : [];
+const relatedComparisons = topic ? (await listed('comparisons')).filter((c) => topicCmpIds.includes(c.id)) : [];
 
 const site = Astro.site!.toString().replace(/\/$/, '');
 const jsonLd: object[] = [{
@@ -48,6 +59,21 @@ if (d.faq.length) jsonLd.push({
       </section>
     )}
     <Faq items={d.faq} />
+    {topic && (relatedGuides.length > 0 || relatedComparisons.length > 0) && (
+      <section class="block">
+        <h2>同主題還可以看：{topic.name}</h2>
+        <ul class="guide-list">
+          {relatedGuides.map((g) => (
+            <li><a href={path.guide(g.id)}><strong>{g.data.title}</strong></a>
+              <p>{g.data.answer}</p></li>
+          ))}
+          {relatedComparisons.map((c) => (
+            <li><span class="a-chip">比較</span> <a href={path.comparison(c.id)}><strong>{c.data.title}</strong></a>
+              <p>{c.data.answer}</p></li>
+          ))}
+        </ul>
+      </section>
+    )}
     <Sources items={d.sources} />
   </article>
 </Base>
