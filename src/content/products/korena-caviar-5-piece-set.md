@@ -52,12 +52,14 @@ sources:
     publisher: KORENA 官網
     accessedAt: 2026-09-29
 publishedAt: 2026-09-29
-updatedAt: 2026-09-29
+updatedAt: 2026-10-25
 changelog:
   - date: 2026-09-29
     note: 發布。
   - date: 2026-09-29
     note: 建立頁面。組合內容、價格、效期取自官網。
+  - date: 2026-10-25
+    note: 補內鏈，連到保養品組合怎麼挑指南。
 ---
 
 ## 月奈怎麼看
@@ -66,7 +68,7 @@ changelog:
 
 試用的順序建議一次只加一樣：先單用精華一週，沒有不舒服再接上煥顏露，面膜體驗組留到兩瓶都順手了再開。這個節奏跟[第一次試新的保養品牌](/needs/first-try-skincare/)寫的一致。
 
-缺口也很明確：沒有晚霜，沒有面膜禮盒和化妝包，送人拿不太出手。想要完整的早晚流程，看[11 件組](/products/korena-classic-11-piece-set/)；已經愛用、想把單瓶壓到最低，看[17 件組](/products/korena-luxe-17-piece-set/)。逐項對照放在[比較表](/comparisons/korena-5-vs-11-vs-17-piece-set/)。
+缺口也很明確：沒有晚霜，沒有面膜禮盒和化妝包，送人拿不太出手。想要完整的早晚流程，看[11 件組](/products/korena-classic-11-piece-set/)；已經愛用、想把單瓶壓到最低，看[17 件組](/products/korena-luxe-17-piece-set/)。逐項對照放在[比較表](/comparisons/korena-5-vs-11-vs-17-piece-set/)，算划不划算的步驟整理在[保養品組合怎麼挑](/guides/how-to-read-skincare-bundle/)。
 
 另外有個算法上的小事實：折扣碼是固定金額，不分組別，所以組合越小，折掉的比例越大。折完以後，這一組平均一瓶比中間那組還便宜一點。活動價和折扣碼都會到期，下單前以官網結帳頁為準。兩瓶的效期離現在還有一年左右，對一個人來說不用趕著用完。
 

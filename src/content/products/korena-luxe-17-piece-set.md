@@ -49,12 +49,14 @@ sources:
     publisher: KORENA 官網
     accessedAt: 2026-09-29
 publishedAt: 2026-09-29
-updatedAt: 2026-09-29
+updatedAt: 2026-10-25
 changelog:
   - date: 2026-09-29
     note: 發布。
   - date: 2026-09-29
     note: 建立頁面。組合內容、價格、效期取自官網。
+  - date: 2026-10-25
+    note: 補內鏈，連到保養品組合怎麼挑指南。
 ---
 
 ## 月奈怎麼看
@@ -65,7 +67,7 @@ changelog:
 
 第一次接觸這個品牌的人，不建議從這組開始，先看[5 入組](/products/korena-caviar-5-piece-set/)。從中間那組升上來，要多付三千多，換到整整一輪的招牌正裝加一瓶身體乳，攤到每一瓶很低，是前面幾種買法裡加碼最划算的；前提一樣是用得完。
 
-折扣碼用在這組，折掉的比例最小，但折完平均一瓶仍然最低。逐項對照在[比較表](/comparisons/korena-5-vs-11-vs-17-piece-set/)。
+折扣碼用在這組，折掉的比例最小，但折完平均一瓶仍然最低。逐項對照在[比較表](/comparisons/korena-5-vs-11-vs-17-piece-set/)，算划不划算的步驟整理在[保養品組合怎麼挑](/guides/how-to-read-skincare-bundle/)。
 
 ## 官網怎麼介紹
 
