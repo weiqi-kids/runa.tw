@@ -50,7 +50,7 @@ sources:
     publisher: BFFECT 官網
     accessedAt: 2026-10-03
 publishedAt: 2026-10-03
-updatedAt: 2026-10-06
+updatedAt: 2026-11-05
 ---
 
 ## 傳明酸是什麼
@@ -90,4 +90,4 @@ updatedAt: 2026-10-06
 
 ## 月奈怎麼看
 
-月奈正在用 [BFFECT 修修瓶](/products/bffect-tranexamic-acid-2-whitening-serum/)（2% 傳明酸＋2% α-熊果素）做 8 週實驗，早晚擦、只留保濕和防曬。看到什麼變化會記在[研究筆記](/lab/)，用完再回來補這一段。想先弄清楚自己的斑適不適合擦傳明酸，看[臉上的斑，擦保養品淡得掉嗎？](/guides/fade-dark-spots-with-skincare/)。
+月奈正在用 [BFFECT 修修瓶](/products/bffect-tranexamic-acid-2-whitening-serum/)（2% 傳明酸＋2% α-熊果素）做 8 週實驗，早晚擦、只留保濕和防曬。看到什麼變化會記在[研究筆記](/lab/)，用完再回來補這一段。想先弄清楚自己的斑適不適合擦傳明酸，看[臉上的斑，擦保養品淡得掉嗎？](/guides/fade-dark-spots-with-skincare/)。如果醫師開的是三合一藥膏，傳明酸通常是藥膏療程結束後接著維持的角色，三合一藥膏怎麼買、會不會反黑看[肝斑三合一藥膏哪裡買？](/guides/whitening-cream-hydroquinone/)。
