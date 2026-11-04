@@ -39,8 +39,12 @@ sources:
     url: https://www.fda.gov.tw/tc/includes/GetFile.ashx?id=f638985424897745272&type=1
     publisher: 衛生福利部食品藥物管理署
     accessedAt: 2026-10-06
+  - title: 'The Efficacy and Safety of Radiofrequency Microneedling for Melasma: A Systematic Review and Qualitative Evidence Synthesis'
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC13240677/
+    publisher: Aesthetic Surgery Journal Open Forum（2026）
+    accessedAt: 2026-10-06
 publishedAt: 2026-10-03
-updatedAt: 2026-10-06
+updatedAt: 2026-11-04
 ---
 
 ## 肝斑長怎樣
@@ -78,6 +82,7 @@ updatedAt: 2026-10-06
 | 口服藥：傳明酸、維他命 C | 醫師 | 彰化醫院列為治療方式之一；口服傳明酸要先評估血栓等禁忌症〔4〕，見[傳明酸是什麼？](/guides/tranexamic-acid-guide/)〔1〕 |
 | 美白導入、合法美白保養品 | 自己／醫師 | 彰化醫院列入；保養品要看是不是衛福部核准的美白成分〔1〕 |
 | 脈衝光、淨膚雷射、皮秒雷射 | 醫師 | 彰化醫院：前面的方法執行三個月以上沒改善才建議局部雷射；臺大醫院：肝斑不穩定時打太強的光電反而激發黑色素，要小心反黑或復發，不宜長期施打；各種雷射的差別與價格見[皮秒雷射是什麼？](/guides/pico-laser-guide/)〔1,2,3〕 |
+| 微針電波（診所常說矽谷電波、無限電波） | 醫師 | 臺大醫院列為肝斑的輔助選項之一，主力仍是藥物和防曬；2026 年系統性回顧整理的研究多數顯示嚴重度和黑色素指數下降，但規模小、常和傳明酸等外用藥一起用，難分辨單獨效果，詳見[電波怎麼選？鳳凰電波、矽谷電波、微針電波差在哪](/guides/radiofrequency-guide/)〔3,7〕 |
 
 ## 美白保養品在這裡的角色
 
